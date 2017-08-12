@@ -90,3 +90,4 @@ db.sqlite3
 
 ### PyEnv ###
 .python-version
+.vscode/settings.json
