@@ -1,0 +1,41 @@
+<html>
+
+<head>
+    <title>Digital Professors :: {{ page_title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/a5d1898ad5.js"></script>
+</head>
+
+<body>
+    {% if user.is_authenticated %}
+
+    <nav class="navbar navbar-toggleable-sm navbar-light bg-faded">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar"
+            aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        <a class="navbar-brand" href="#">Digital Professors</a>
+        <div class="navbar-collapse collapse" id="navbar">
+            <div class="navbar-nav mr-auto">
+                {% for link in user.nav_links %}
+                <a class="nav-item nav-link" href="{% url link.url %}">{{ link.name }}</a> {% endfor %}
+            </div>
+            <a class="btn btn-outline-danger my-2 my-md-0 mr-2" href="{% url 'logout' %}">Logout</a>
+        </div>
+    </nav>
+
+    {% endif %} 
+
+    {% block content %} 
+    {% endblock %}
+</body>
+
+</html>
