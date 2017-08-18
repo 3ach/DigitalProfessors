@@ -1,29 +1,38 @@
 from django import forms
-from users.models import User
+from bootstrap3_datetime.widgets import DateTimePicker
+from tutoring.models import Session, Client, Tutor
 
-class LoginForm(forms.Form):
-    username = forms.CharField(max_length=128, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Username', 'style': 'margin-bottom: -1; border-bottom-right-radius: 0; border-bottom-left-radius: 0'}))
-    password = forms.CharField(max_length=128, widget=forms.PasswordInput(
-        attrs={'class': 'form-control', 'placeholder': 'Password', 'style': 'border-top-right-radius: 0; border-top-left-radius: 0'}))
 
-class UserForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=128, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'First Name'}
+class SessionForm(forms.ModelForm):
+    client = forms.ModelChoiceField(queryset=Client.objects.all(), empty_label="Select Client", widget=forms.Select(
+        attrs={'class': 'form-control'}
     ))
-    last_name = forms.CharField(max_length=128, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Last Name'}
+    tutor = forms.ModelChoiceField(queryset=Tutor.objects.all(), empty_label="Select Tutor", widget=forms.Select(
+        attrs={'class': 'form-control'}
     ))
-    username = forms.CharField(max_length=128, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Username'}
-    ))
-    password = forms.CharField(max_length=128, widget=forms.PasswordInput(
-        attrs={'class': 'form-control', 'placeholder': 'Password'}
-    ))
-    email = forms.CharField(max_length=128, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Email'}
-    ))
+    time = forms.DateTimeField(widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm", "icons": {
+        "time": 'fa fa-clock-o',
+        "date": 'fa fa-calendar',
+        "up": 'fa fa-chevron-circle-up',
+        "down": 'fa fa-chevron-circle-down',
+        "previous": 'fa fa-chevron-circle-left',
+        "next": 'fa fa-chevron-circle-right',
+        "today": 'fa fa-calendar-times-o',
+        "clear": 'fa fa-trash',
+        "close": 'fa fa-times'
+    }, }, attrs={'class': 'form-control', 'placeholder': 'Date and Time'}))
+    distance = forms.IntegerField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Distance'}))
+    billed = forms.DecimalField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Billed'}))
+    paid = forms.DecimalField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Paid'}))
+
+    class Media:
+        css = {'all': ('css/bootstrap-datetimepicker.css', )}
+        js = ('js/moment-with-locales.min.js',
+              'js/bootstrap-datetimepicker.min.js')
 
     class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'username', 'password', 'email')
+        model = Session
+        fields = ('client', 'tutor', 'time', 'distance', 'billed', 'paid')

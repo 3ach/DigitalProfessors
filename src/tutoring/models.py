@@ -13,7 +13,7 @@ class Session(models.Model):
 class Client(models.Model):
     user = models.ForeignKey('users.User')
     address = models.TextField()
-    phone = models.IntegerField()
+    phone = models.DecimalField(max_digits=10, decimal_places=0)
     website = models.URLField()
     wifi_ssid = models.TextField(max_length=128)
     wifi_password = models.TextField(max_length=128)
@@ -32,6 +32,12 @@ class Client(models.Model):
 
         return base_url.format(urlencode(args))
 
+    def __str__(self):
+        return self.user.first_name + ' ' + self.user.last_name
+
 
 class Tutor(models.Model):
     user = models.ForeignKey("users.User")
+
+    def __str__(self):
+        return self.user.first_name + ' ' + self.user.last_name
