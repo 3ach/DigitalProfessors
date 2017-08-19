@@ -1,12 +1,13 @@
 from django.contrib.auth import REDIRECT_FIELD_NAME, login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.http import is_safe_url
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from django.views.generic import FormView, RedirectView, TemplateView, UpdateView, DeleteView, CreateView
+from django.views.generic import FormView, RedirectView, TemplateView, UpdateView, DeleteView, CreateView, View
 from tutoring.models import Tutor, Client, Session
 from tutoring.forms import SessionForm
 from users.models import User
@@ -103,5 +104,15 @@ class DashboardView(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         user = self.request.user
-        
+
         return user.dashboard
+
+class SessionNoteUpdate(View):
+    def post(self, request, session_id):
+        notes = request.POST['notes']
+        session = Session.objects.get(id=session_id)
+
+        session.notes = notes
+        session.save()
+
+        return HttpResponse(status=200)
