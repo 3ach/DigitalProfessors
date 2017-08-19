@@ -2,46 +2,43 @@
 
 {% block content %}
 
-<div class="container">
-    <br>
-   
-    <div class="row">
-        <div class="col-12">
-            <div class="float-right">
-                <a href="{% url 'add-tutor' %}" class="btn btn-success">Add Tutor</a>
-            </div>
+<br>
+
+<div class="row">
+    <div class="col-12">
+        <div class="float-right">
+            <a href="{% url 'add-tutor' %}" class="btn btn-success">Add Tutor</a>
         </div>
     </div>
+</div>
 
-    <br>
+<br>
 
-    <div class="row">
-        <div class="col-12">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Accounting</td>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for tutor in tutors %}
-                    
-                    <tr>
-                        <td>{{ tutor.user.first_name }} {{ tutor.user.last_name }}</td>
-                        <td><a href="" class="btn btn-block btn-outline-success"><span class="fa fa-usd"></span></a></td>
-                        <td><a href="{% url 'edit-user' pk=tutor.user.id %}" class="btn btn-block btn-outline-warning"><span class="fa fa-pencil-square-o"></span></a></td>
-                        <td><a href="{% url 'delete-user' pk=tutor.user.id %}" class="btn btn-block btn-outline-danger"><span class="fa fa-trash"></span></a></td>
-                    </tr>
+<div class="row">
+    <div class="col-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Accounting</td>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tutor in tutors %}
+                
+                <tr>
+                    <td>{{ tutor.user.first_name }} {{ tutor.user.last_name }}</td>
+                    <td><a href="" class="btn btn-block btn-outline-success"><span class="fa fa-usd"></span></a></td>
+                    <td><a href="{% url 'edit-user' pk=tutor.user.id %}" class="btn btn-block btn-outline-warning"><span class="fa fa-pencil-square-o"></span></a></td>
+                    <td><a href="{% url 'delete-user' pk=tutor.user.id %}" class="btn btn-block btn-outline-danger"><span class="fa fa-trash"></span></a></td>
+                </tr>
 
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-
 </div>
 
 {% endblock %}

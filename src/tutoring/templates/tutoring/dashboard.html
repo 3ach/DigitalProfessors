@@ -2,49 +2,46 @@
 
 {% block content %}
 
-<div class="container">
-    <br>
-    <div class="row">
-        <div class="col-12">
-            <p class="display-4">Hiya, {{ user.first_name }}!</p>
-        </div>
+<br>
+<div class="row">
+    <div class="col-12">
+        <p class="display-4">Hiya, {{ user.first_name }}!</p>
     </div>
-    <div class="row">
-        <div class="col-12 col-sm-10 mt-3">
-            <p class="h4 align-bottom">Here are some recent and upcoming tutoring sessions:</p>
-        </div>
-        <div class="col-12 col-sm-2 mt-1">
-            <a href="{% url 'add-session' %}" class="btn btn-success btn-block"><span class="fa fa-plus"> </span>&nbsp; Add Session</a>
-        </div>
+</div>
+<div class="row">
+    <div class="col-12 col-sm-10 mt-3">
+        <p class="h4 align-bottom">Here are some recent and upcoming tutoring sessions:</p>
     </div>
+    <div class="col-12 col-sm-2 mt-1">
+        <a href="{% url 'add-session' %}" class="btn btn-success btn-block"><span class="fa fa-plus"> </span>&nbsp; Add Session</a>
+    </div>
+</div>
 
-    <br>
+<br>
 
-    {% for session in sessions %}
+{% for session in sessions %}
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card card-inverse" style="background: #333">
-                <img class="card-img-top img-fluid" src="{{ session.client.map_url }}" alt="Card image cap">
-                <div class="card-block">
-                    <div class="row">
-                        <div class="col-12 col-sm-10">
-                            <h4 class="card-title">{{ session.client.user.first_name }} {{ session.client.user.last_name }}</h4>
-                            <p class="card-text"><small>{{ session.client.address|linebreaksbr }}</small></p>
-                        </div>
-                        <div class="col-12 col-sm-2 mt-3 mt-sm-4">
-                            <a href="{% url "session-detail" session_id=session.id %}" class="btn btn-outline-info btn-lg btn-block">Details</a>
-                        </div>
+<div class="row">
+    <div class="col-12">
+        <div class="card card-inverse" style="background: #333">
+            <img class="card-img-top img-fluid" src="{{ session.client.map_url }}" alt="Card image cap">
+            <div class="card-block">
+                <div class="row">
+                    <div class="col-12 col-sm-10">
+                        <h4 class="card-title">{{ session.client.user.first_name }} {{ session.client.user.last_name }}</h4>
+                        <p class="card-text"><small>{{ session.client.address|linebreaksbr }}</small></p>
+                    </div>
+                    <div class="col-12 col-sm-2 mt-3 mt-sm-4">
+                        <a href="{% url "session-detail" session_id=session.id %}" class="btn btn-outline-info btn-lg btn-block">Details</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <hr>
-
-    {% endfor %}
-
 </div>
+
+<hr>
+
+{% endfor %}
 
 {% endblock %}

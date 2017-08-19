@@ -2,35 +2,34 @@
 
 {% block content %}
 
-<div class="container">
-    <div class="row mt-2">
-        <div class="col-12 col-md-6 offset-md-3">
-            <span class="display-4">Add Session</span>
-        </div>
+<div class="row mt-2">
+    <div class="col-12 col-md-6 offset-md-3">
+        <span class="display-4">Add Session</span>
     </div>
+</div>
 
-    <br>
+<br>
 
-    <form action="" method="post">
-    {% csrf_token %}
-    {{ form.media }}
-    
-    {% for field in form %}
-    
-    <div class="row mb-2">
-        <div class="col-12 col-md-6 offset-md-3">
-            {{ field.errors }}
-            {{ field }}
-        </div>
+<form action="" method="post">
+{% csrf_token %}
+{{ form.media }}
+
+{% for field in form %}
+
+<div class="row mb-2">
+    <div class="col-12 col-md-6 offset-md-3">
+        {{ field.errors }}
+        {{ field }}
     </div>
-    
-    {% endfor %}
-    <br>
-    <div class="row">
-        <div class="col-12 col-md-6 offset-md-3">
-            <input type="submit" value="Save" class="btn btn-primary btn-block" />
-        </div>
+</div>
+
+{% endfor %}
+<br>
+<div class="row">
+    <div class="col-12 col-md-6 offset-md-3">
+        <input type="submit" value="Save" class="btn btn-primary btn-block" />
     </div>
+</div>
     
 </form>
 
