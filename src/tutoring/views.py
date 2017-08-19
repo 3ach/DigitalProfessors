@@ -37,9 +37,17 @@ class ManagerAccountingView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ManagerAccountingView, self).get_context_data(**kwargs)
 
-        aggregates = Session.objects.all().aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
-        unpaid = Session.objects.exclude(billed=F('paid')).values('client').annotate(Sum('billed')).annotate(Sum('paid'))
-        owed = Session.objects.exclude(earnings=F('earnings_paid')).values('tutor').annotate(Sum('earnings')).annotate(Sum('earnings_paid'))
+        if 'start' in self.request.GET and 'end' in self.request.GET:
+            start = self.request.GET['start']
+            end = self.request.GET['end']
+            
+            base = Session.objects.filter(date__gte=start).filter(date__lte=end)
+        else:
+            base = Session.objects.all()
+
+        aggregates = base.aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
+        unpaid = base.exclude(billed=F('paid')).values('client').annotate(Sum('billed')).annotate(Sum('paid'))
+        owed = base.exclude(earnings=F('earnings_paid')).values('tutor').annotate(Sum('earnings')).annotate(Sum('earnings_paid'))
 
         try:
             for client in unpaid: 
@@ -68,13 +76,22 @@ class ManagerAccountingView(TemplateView):
 @method_decorator(login_required, name='dispatch')
 class TutorAccountingView(TemplateView):
     template_name = 'tutoring/accounting-tutor.html'
+    
 
     def get_context_data(self, **kwargs):
         user = self.request.user
         context = super(TutorAccountingView, self).get_context_data(**kwargs)
 
-        aggregates = Session.objects.filter(tutor__user=user.id).aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
-        unpaid = Session.objects.filter(tutor__user=user).exclude(billed=F('paid'))
+        if 'start' in self.request.GET and 'end' in self.request.GET:
+            start = self.request.GET['start']
+            end = self.request.GET['end']
+            
+            base = Session.objects.filter(date__gte=start).filter(date__lte=end)
+        else:
+            base = Session.objects.all()        
+
+        aggregates = base.filter(tutor__user=user.id).aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
+        unpaid = base.filter(tutor__user=user).exclude(billed=F('paid'))
 
         try:
             context['billed'] = aggregates['earnings__sum']
@@ -94,8 +111,16 @@ class ClientAccountingView(TemplateView):
         user = self.request.user
         context = super(ClientAccountingView, self).get_context_data(**kwargs)
 
-        aggregates = Session.objects.filter(client__user=user.id).aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
-        unpaid = Session.objects.filter(client__user=user).exclude(billed=F('paid'))
+        if 'start' in self.request.GET and 'end' in self.request.GET:
+            start = self.request.GET['start']
+            end = self.request.GET['end']
+            
+            base = Session.objects.filter(date__gte=start).filter(date__lte=end)
+        else:
+            base = Session.objects.all()
+
+        aggregates = base.filter(client__user=user.id).aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
+        unpaid = base.filter(client__user=user).exclude(billed=F('paid'))
 
         try:
             context['billed'] = aggregates['billed__sum']
