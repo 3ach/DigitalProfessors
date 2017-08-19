@@ -12,7 +12,7 @@
                 <div class="card-block">
                     <h4 class="card-title">Login</h4>
                     <div class="card-text">
-                        <form class="form" action="/login/" method="post">
+                        <form class="form" action="{% url 'login' %}" method="post">
                             {% csrf_token %}
                             {% for field in form %}
                                 {{ field.errors }}
