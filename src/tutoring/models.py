@@ -1,6 +1,8 @@
 from urllib.parse import urlencode
 from django.conf import settings
 from django.db import models
+from datetime import datetime, date
+from decimal import Decimal
 
 class SessionCategory(models.Model):
     name = models.CharField(max_length=128)
@@ -19,9 +21,9 @@ class Session(models.Model):
     payment_method = models.CharField(max_length=4, choices=settings.CHARGE_METHODS)
     hourly = models.DecimalField(max_digits=12, decimal_places=2)
     billed = models.DecimalField(max_digits=12, decimal_places=2)
-    paid = models.DecimalField(max_digits=12, decimal_places=2)
-    earnings = models.DecimalField(max_digits=12, decimal_places=2)
-    earnings_paid = models.DecimalField(max_digits=12, decimal_places=2)
+    paid = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    earnings = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    earnings_paid = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     notes = models.TextField(blank=True, null=True)
 
     @property
@@ -31,6 +33,12 @@ class Session(models.Model):
     @property
     def earnings_remaining(self):
         return self.earnings - self.earnings_paid
+
+    def save(self, *args, **kwargs):
+        duration = datetime.combine(date.today(), self.end_time) - datetime.combine(date.today(), self.start_time)
+        self.earnings = Decimal(duration.total_seconds() / (60 * 60)) * self.tutor.wage
+
+        return super(Session, self).save(*args, **kwargs)
 
 class Client(models.Model):
     user = models.ForeignKey('users.User')
@@ -72,6 +80,7 @@ class Client(models.Model):
         return super(Client, self).save(*args, **kwargs)
 
 class Tutor(models.Model):
+    wage = models.DecimalField(max_digits=12, decimal_places=2)
     user = models.ForeignKey("users.User")
 
     def __str__(self):
