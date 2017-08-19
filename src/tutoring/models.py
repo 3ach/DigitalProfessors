@@ -4,6 +4,9 @@ from django.db import models
 
 class SessionCategory(models.Model):
     name = models.CharField(max_length=128)
+    
+    def __str__(self):
+        return self.name
 
 class Session(models.Model):
     client = models.ForeignKey("Client")

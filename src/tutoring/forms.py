@@ -1,5 +1,5 @@
 from django import forms
-from tutoring.models import Session, Client, Tutor
+from tutoring.models import Session, Client, Tutor, SessionCategory
 
 
 class SessionForm(forms.ModelForm):
@@ -8,6 +8,10 @@ class SessionForm(forms.ModelForm):
     ))
 
     tutor = forms.ModelChoiceField(queryset=Tutor.objects.all(), empty_label="Select Tutor", widget=forms.Select(
+        attrs={'class': 'form-control'}
+    ))
+
+    category = forms.ModelChoiceField(queryset=SessionCategory.objects.all(), empty_label="Select Category", widget=forms.Select(
         attrs={'class': 'form-control'}
     ))
 
