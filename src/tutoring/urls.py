@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^clients', views.ClientsView.as_view(), name="clients"),
     url(r'^tutors', views.TutorsView.as_view(), name="tutors"),
     url(r'^sessions/new', views.CreateSessionView.as_view(), name="add-session"),
+    url(r'^csv/', views.CSVUploadView.as_view(), name="csv-upload"),
     url(r'^dashboard/', include(dashboards)),
     url(r'^accounting/', include(accounting)),
     url(r'^$', views.DashboardView.as_view())

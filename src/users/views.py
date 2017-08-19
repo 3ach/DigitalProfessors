@@ -7,7 +7,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import FormView, RedirectView, TemplateView, UpdateView, DeleteView, CreateView
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from tutoring.models import Tutor, Client, Session
 from users.forms import LoginForm, UserForm, ClientForm, TutorForm
 from users.models import User
@@ -76,9 +76,9 @@ class LoginView(FormView):
 
         user = authenticate(request=self.request, username=username, password=password)
 
-        if user is None:
-            pass
-
+        if user is None or not user.is_authenticated:
+            return redirect('/users/login/?next=/')
+        
         login(self.request, user)
 
         # If the test cookie worked, go ahead and

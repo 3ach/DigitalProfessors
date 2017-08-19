@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="row pt-3 mb-sm-3">
+<div class="row pt-3 mb-sm-3 text-center">
     <div class="col-6 col-sm-3 mb-3 mb-sm-0">
         <h1 class="text-warning">${{ billed }}</h1>
         <h5 class="text-warning">Billed</h5>
@@ -20,7 +20,7 @@
         <h5 class="text-primary">Gross Profits</h5>
     </div>
 </div>
-<div class="row">
+<div class="row text-center">
     <div class="col-6 col-sm-3 mb-3 mb-sm-0">
         <h1 class="text-warning">${{ owed }}</h1>
         <h5 class="text-warning">Owed</h5>
@@ -57,7 +57,8 @@
                 {% for client in unpaid %}
                 
                 <tr>
-                    <td><a href="{% url 'accounting-detail' user_id=client.client.user.id %}">{{ client.client.user.first_name }} {{ client.client.user.last_name }}</a></td>
+                    <!-- <td><a href="{% url 'accounting-detail' user_id=client.client.user.id %}">{{ client.client.user.first_name }} {{ client.client.user.last_name }}</a></td> -->
+                    <td>{{ client.client.user.first_name }} {{ client.client.user.last_name }}</td>
                     <td><span class="text-success">${{ client.total_owed }}</span></td>
                 </tr>
 
@@ -91,7 +92,8 @@
                 {% for tutor in tutorsOwed %}
                 
                 <tr>
-                    <td><a href="{% url 'accounting-detail' user_id=tutor.tutor.user.id %}">{{ tutor.tutor.user.first_name }} {{ tutor.tutor.user.last_name }}</a></td>
+                    <!-- <td><a href="{% url 'accounting-detail' user_id=tutor.tutor.user.id %}">{{ tutor.tutor.user.first_name }} {{ tutor.tutor.user.last_name }}</a></td> -->
+                    <td>{{ tutor.tutor.user.first_name }} {{ tutor.tutor.user.last_name }}</td>
                     <td><span class="text-danger">${{ tutor.total_owed }}</span></td>
                 </tr>
 

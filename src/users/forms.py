@@ -88,6 +88,10 @@ class ClientForm(UserForm):
 class TutorForm(UserForm):
     wage = forms.DecimalField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Wage'}))
+    
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={'class': 'form-control', 'placeholder': 'Password'}
+    ))
 
     def __init__(self, *args, **kwargs):
         super(TutorForm, self).__init__(*args, **kwargs)
@@ -96,8 +100,13 @@ class TutorForm(UserForm):
             tutor = Tutor.objects.get(user=kwargs['instance'])
 
             self.initial['wage'] = tutor.wage
+
     def save(self, commit=True):
         user = super(TutorForm, self).save(commit)
+
+        if self.cleaned_data['password']:
+            user.set_password(self.cleaned_data['password'])
+            user.save()
 
         if commit:
             tutor, created = Tutor.objects.get_or_create(user=user)

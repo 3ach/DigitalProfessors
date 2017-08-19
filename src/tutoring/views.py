@@ -2,6 +2,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME, login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, F
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.http import is_safe_url
@@ -12,7 +13,10 @@ from django.views.generic import FormView, RedirectView, TemplateView, UpdateVie
 from tutoring.models import Tutor, Client, Session
 from tutoring.forms import SessionForm
 from users.models import User
+from csv import DictReader
 from decimal import Decimal
+import io
+import json
 
 @method_decorator(login_required, name='dispatch')
 class AccountingView(RedirectView):
@@ -60,11 +64,39 @@ class ManagerAccountingView(TemplateView):
 
 @method_decorator(login_required, name='dispatch')
 class TutorAccountingView(TemplateView):
-    pass
+    template_name = 'tutoring/accounting-tutor.html'
+
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        context = super(TutorAccountingView, self).get_context_data(**kwargs)
+
+        aggregates = Session.objects.filter(tutor__user=user.id).aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
+        unpaid = Session.objects.filter(tutor__user=user).exclude(billed=F('paid'))
+
+        context['billed'] = aggregates['earnings__sum']
+        context['received'] = aggregates['earnings_paid__sum']
+        context['due'] = context['billed'] - context['received']
+        context['unpaid'] = unpaid
+        
+        return context
 
 @method_decorator(login_required, name='dispatch')
 class ClientAccountingView(TemplateView):
-    pass
+    template_name = 'tutoring/accounting-client.html'
+
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        context = super(ClientAccountingView, self).get_context_data(**kwargs)
+
+        aggregates = Session.objects.filter(client__user=user.id).aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
+        unpaid = Session.objects.filter(client__user=user).exclude(billed=F('paid'))
+
+        context['billed'] = aggregates['billed__sum']
+        context['received'] = aggregates['paid__sum']
+        context['due'] = context['billed'] - context['received']
+        context['unpaid'] = unpaid
+        
+        return context
 
 @method_decorator(login_required, name='dispatch')
 class UserAccountingView(TemplateView):
@@ -156,6 +188,49 @@ class DashboardView(RedirectView):
         user = self.request.user
 
         return user.dashboard
+
+@method_decorator(login_required, name='dispatch')
+class CSVUploadView(TemplateView):
+    template_name = 'tutoring/csv-form.html'
+
+    def post(self, request):
+        post = request.POST
+        csvfile = request.FILES['csvFile'].file
+        csvfile = csvfile.read().decode('utf8')
+        headers = json.loads(request.POST['headers'])
+
+        reader = DictReader(io.StringIO(csvfile), headers);
+
+        for index, row in enumerate(reader):
+            if index == 0:
+                continue
+
+            client = Client()
+            user = User()
+
+            user.first_name = row[headers[int(post['firstName'])]]
+            user.last_name = row[headers[int(post['lastName'])]]
+            user.email = row[headers[int(post['email'])]]
+
+            if post['username'] == 'generate':
+                user.username = row[headers[int(post['firstName'])]].lower() + row[headers[int(post['lastName'])]].lower()
+            else: 
+                user.username = row[headers[int(post['username'])]]
+            
+            user.save()
+            user.set_password(row[headers[int(post['phone'])]])
+            user.save()
+
+            client.address = row[headers[int(post['address'])]]
+            client.phone = row[headers[int(post['phone'])]]
+            client.website = row[headers[int(post['website'])]]
+            client.wifi_ssid = row[headers[int(post['ssid'])]]
+            client.wifi_password = row[headers[int(post['password'])]]
+            client.user = user
+
+            client.save()
+
+        return redirect(reverse_lazy('clients'))
 
 class SessionNoteUpdate(View):
     def post(self, request, session_id):
