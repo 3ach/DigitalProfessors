@@ -1,6 +1,6 @@
 from django.contrib.auth import REDIRECT_FIELD_NAME, login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum
+from django.db.models import Sum, F
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -13,16 +13,6 @@ from tutoring.models import Tutor, Client, Session
 from tutoring.forms import SessionForm
 from users.models import User
 from decimal import Decimal
-
-@method_decorator(login_required, name='dispatch')
-class ManagerDashboardView(TemplateView):
-    template_name = "tutoring/dashboard.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(ManagerDashboardView, self).get_context_data(**kwargs)
-        context["sessions"] = Session.objects.all()
-
-        return context
 
 @method_decorator(login_required, name='dispatch')
 class AccountingView(RedirectView):
@@ -44,6 +34,16 @@ class ManagerAccountingView(TemplateView):
         context = super(ManagerAccountingView, self).get_context_data(**kwargs)
 
         aggregates = Session.objects.all().aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
+        unpaid = Session.objects.exclude(billed=F('paid')).values('client').annotate(Sum('billed')).annotate(Sum('paid'))
+        owed = Session.objects.exclude(earnings=F('earnings_paid')).values('tutor').annotate(Sum('earnings')).annotate(Sum('earnings_paid'))
+
+        for client in unpaid: 
+            client['client'] = Client.objects.get(id=client["client"])
+            client['total_owed'] = client['billed__sum'] - client['paid__sum']
+
+        for tutor in owed:
+            tutor['tutor'] = Tutor.objects.get(id=tutor['tutor'])
+            tutor['total_owed'] = tutor['earnings__sum'] - tutor['earnings_paid__sum']
 
         context['billed'] = aggregates['billed__sum']
         context['received'] = aggregates['paid__sum']
@@ -53,6 +53,8 @@ class ManagerAccountingView(TemplateView):
         context['paid'] = aggregates['earnings_paid__sum']
         context['earnings_due'] = context['owed'] - context['paid']
         context['net'] = context['gross'] - context['owed']
+        context['unpaid'] = unpaid
+        context['tutorsOwed'] = owed
         
         return context
 
@@ -63,6 +65,12 @@ class TutorAccountingView(TemplateView):
 @method_decorator(login_required, name='dispatch')
 class ClientAccountingView(TemplateView):
     pass
+
+@method_decorator(login_required, name='dispatch')
+class UserAccountingView(TemplateView):
+    pass
+
+@method_decorator()
 
 @method_decorator(login_required, name='dispatch')
 class ClientsView(TemplateView):
@@ -85,17 +93,13 @@ class TutorsView(TemplateView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class UserAccountingView(TemplateView):
-    pass
-
-@method_decorator(login_required, name='dispatch')
 class TutorDashboardView(TemplateView):
     template_name = "tutoring/dashboard.html"
 
     def get_context_data(self, **kwargs):
         user = self.request.user
         context = super(TutorDashboardView, self).get_context_data(**kwargs)
-        context["sessions"] = Session.objects.filter(tutor__user=user)
+        context["sessions"] = Session.objects.filter(tutor__user=user).order_by('-date')
 
         return context
 
@@ -106,7 +110,17 @@ class ClientDashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         context = super(ClientDashboardView, self).get_context_data(**kwargs)
-        context["sessions"] = Session.objects.filter(client__user=user)
+        context["sessions"] = Session.objects.filter(client__user=user).order_by('-date')
+
+        return context
+
+@method_decorator(login_required, name='dispatch')
+class ManagerDashboardView(TemplateView):
+    template_name = "tutoring/dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ManagerDashboardView, self).get_context_data(**kwargs)
+        context["sessions"] = Session.objects.all().order_by('-date')
 
         return context
 

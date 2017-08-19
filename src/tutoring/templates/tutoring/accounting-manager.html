@@ -40,4 +40,71 @@
 </div>
 <hr>
 
+<div class="row">
+    <div class="col-12 col-sm-6">
+        <h4>Client Balances</h4>
+
+        {% if unpaid|length > 0 %}
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in unpaid %}
+                
+                <tr>
+                    <td><a href="{% url 'accounting-detail' user_id=client.client.user.id %}">{{ client.client.user.first_name }} {{ client.client.user.last_name }}</a></td>
+                    <td><span class="text-success">${{ client.total_owed }}</span></td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+
+        <div class="alert alert-success">All clients have paid in full!</div>
+
+        {% endif %}
+    </div>
+
+    <div class="col-12 hidden-sm-up">
+        <hr />
+    </div>
+
+    <div class="col-12 col-sm-6">
+        <h4>Owed to Employees</h4>
+        {% if tutorsOwed|length > 0 %}
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tutor in tutorsOwed %}
+                
+                <tr>
+                    <td><a href="{% url 'accounting-detail' user_id=tutor.tutor.user.id %}">{{ tutor.tutor.user.first_name }} {{ tutor.tutor.user.last_name }}</a></td>
+                    <td><span class="text-danger">${{ tutor.total_owed }}</span></td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        {% else %}
+
+        <div class="alert alert-success">All employees have been paid in full!</div>
+
+        {% endif %}
+    </div>
+</div>
+
 {% endblock %}
