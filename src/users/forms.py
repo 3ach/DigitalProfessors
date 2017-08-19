@@ -46,18 +46,39 @@ class ClientForm(UserForm):
         attrs={'class': 'form-control', 'placeholder': 'Wi-Fi Password'}
     ))
 
+    def __init__(self, *args, **kwargs):
+        super(ClientForm, self).__init__(*args, **kwargs)
+        
+        if kwargs['instance']:
+            client = Client.objects.get(user=kwargs['instance'])
+
+            self.initial['address'] = client.address
+            self.initial['phone'] = client.phone
+            self.initial['website'] = client.website
+            self.initial['wifi_ssid'] = client.wifi_ssid
+            self.initial['wifi_password'] = client.wifi_password
+        
     def save(self, commit=True):
         user = super(ClientForm, self).save(commit)
 
         if commit:
-            client = Client.objects.filter(user=user)
+            client, created = Client.objects.get_or_create(user=user)
 
-            if client.exists():
-                client.update(address=self.cleaned_data['address'], phone=self.cleaned_data['phone'],
-                              wifi_ssid=self.cleaned_data['wifi_ssid'], wifi_password=self.cleaned_data['wifi_password'],)
-            else:
-                client = Client.objects.create(address=self.cleaned_data['address'], phone=self.cleaned_data['phone'],
-                                           wifi_ssid=self.cleaned_data['wifi_ssid'], wifi_password=self.cleaned_data['wifi_password'], user=user)
+            if self.cleaned_data['address']:
+                client.address = self.cleaned_data['address']
+            
+            if self.cleaned_data['phone']:
+                client.phone = self.cleaned_data['phone']
+
+            if self.cleaned_data['website']:
+                client.website = self.cleaned_data['website']
+
+            if self.cleaned_data['wifi_ssid']:
+                client.wifi_ssid = self.cleaned_data['wifi_ssid']
+
+            if self.cleaned_data['wifi_password']:
+                client.wifi_password = self.cleaned_data['wifi_password']
+
             client.save()
 
         return user
