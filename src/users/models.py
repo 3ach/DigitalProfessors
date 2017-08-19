@@ -16,6 +16,17 @@ class User(AbstractUser):
             raise SuspiciousOperation
 
     @property
+    def usertype(self):
+        if self.is_staff:
+            return 'manager'
+        elif Tutor.objects.filter(user=self).exists():
+            return 'tutor'
+        elif Client.objects.filter(user=self).exists():
+            return 'client'
+        else:
+            raise SuspiciousOperation
+
+    @property
     def nav_links(self):
         return self._userlevel({
             'client': [],
