@@ -86,7 +86,9 @@ class CreateSessionView(CreateView):
     model = Session
     template_name = 'tutoring/session-form.html'
     form_class = SessionForm
-    success_url = reverse_lazy('dashboard')
+    
+    def get_success_url(self):
+        return reverse_lazy('session-detail', args=(self.object.id))
 
 @method_decorator(login_required, name='dispatch')
 class DashboardView(RedirectView):

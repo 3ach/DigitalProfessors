@@ -3,26 +3,27 @@
 {% block content %}
 
 <div class="container">
+    <div class="row mt-2">
+        <div class="col-12 col-md-6 offset-md-3">
+            <span class="display-4">Add Session</span>
+        </div>
+    </div>
+
+    <br>
+
     <form action="" method="post">
     {% csrf_token %}
-
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js">
-        </script>
-        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.js">
-        </script>
     {{ form.media }}
     
     {% for field in form %}
     
-    <br>
-    <div class="row">
+    <div class="row mb-2">
         <div class="col-12 col-md-6 offset-md-3">
             {{ field.errors }}
             {{ field }}
         </div>
     </div>
     
-
     {% endfor %}
     <br>
     <div class="row">

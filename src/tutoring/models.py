@@ -2,11 +2,18 @@ from urllib.parse import urlencode
 from django.conf import settings
 from django.db import models
 
+class SessionCategory(models.Model):
+    name = models.CharField(max_length=128)
+
 class Session(models.Model):
     client = models.ForeignKey("Client")
     tutor = models.ForeignKey("Tutor")
-    time = models.DateTimeField()
+    category = models.ForeignKey("SessionCategory")
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     distance = models.FloatField()
+    hourly = models.DecimalField(max_digits=12, decimal_places=2)
     billed = models.DecimalField(max_digits=12, decimal_places=2)
     paid = models.DecimalField(max_digits=12, decimal_places=2)
 
