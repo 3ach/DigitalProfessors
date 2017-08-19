@@ -77,7 +77,11 @@ class SessionView(TemplateView):
 
     def get_context_data(self, **kwargs):
         user = self.request.user
+        session_id = kwargs['session_id']
+        session = Session.objects.get(id=session_id)
+
         context = super(SessionView, self).get_context_data(**kwargs)
+        context['session'] = session
         
         return context
 
@@ -99,7 +103,5 @@ class DashboardView(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         user = self.request.user
-
-        print("getting redirect url")
-
+        
         return user.dashboard

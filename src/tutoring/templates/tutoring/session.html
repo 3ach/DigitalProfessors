@@ -2,4 +2,77 @@
 
 {% block content %}
 
+<div class="text-center">
+
+    <div class="row mb-2">
+        <div class="col-12">
+            <span class="h4">{{ session.date }}</span>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <span class="h4">{{ session.start_time }} - {{ session.end_time }}</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-sm-6 mb-3">
+            <div class="card card-inverse" style="background: #333">
+                <h4 class="card-header">Client</h4>
+                <div class="card-block">
+                    <div class="row">
+                        <div class="col-12"> 
+                            <h5>{{ session.client.user.first_name }} {{ session.client.user.last_name }}</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h6>{{ session.client.address|linebreaks }}</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6">
+            <div class="card card-inverse" style="background: #333">
+                <h4 class="card-header">Tutor</h4>
+                <div class="card-block">
+                    <div class="row">
+                        <div class="col-12"> 
+                            <h5>{{ session.tutor.user.first_name }} {{ session.tutor.user.last_name }}</h5>
+                            {% if user.usertype == 'manager' or user.usertype == 'tutor' %}
+                            
+                            <h6>{{ session.distance }} miles traveled</h6>
+
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr />
+
+<div class="row">
+    <div class="col-12">
+        <h4>Notes</h4>
+    </div>
+</div>
+
+{% if user.usertype == 'manager' or user.usertype == 'tutor' %}
+
+<div class="row">
+    <div class="col-12">    
+        <button class="btn btn-outline-info btn-block">Modify Notes</button>
+    </div>
+</div>
+
+{% endif %}
+
+
 {% endblock %}
