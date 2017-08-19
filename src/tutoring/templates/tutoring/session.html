@@ -32,6 +32,46 @@
                             <h6>{{ session.client.address|linebreaks }}</h6>
                         </div>
                     </div>
+
+                    {% if user.usertype == 'manager' %}
+                            
+                    <div class="row">
+                        <div class="col-4">
+                            <h5 class="text-warning" style="margin-bottom: 0;">${{ session.billed }}</h5>
+                        </div>
+                        <div class="col-4">
+                            <h5 class="text-success" style="margin-bottom: 0;">${{ session.paid }}</h5>
+                        </div>
+                        <div class="col-4">
+                            <h5 class="text-danger" style="margin-bottom: 0;">${{ session.remaining }}</h5>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4">
+                            <p class="text-warning" style="margin-bottom: 0;">Billed</p>
+                        </div>
+                        <div class="col-4">
+                            <p class="text-success" style="margin-bottom: 0;">Paid</p>
+                        </div>
+                        <div class="col-4">
+                            <p class="text-danger" style="margin-bottom: 0;">Balance</p>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" id="payment" placeholder="Payment Amount" style="border-color: white;">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-success" id="modifyPayment">Log</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -59,13 +99,18 @@
 
 <hr />
 
-<div class="row">
-    <div class="col-12">
-        <h4>Notes</h4>
-    </div>
-</div>
+
 
 {% if user.usertype == 'manager' or user.usertype == 'tutor' %}
+
+<div class="row mb-2">
+    <div class="col-6">
+        <h4>Notes</h4>
+    </div>
+    <div class="col-6">
+         <button id="modifyNotes" class="btn btn-outline-info btn-block">Modify Notes</button>
+    </div>
+</div>
 
 <script src="{% static 'js/session-detail.js' %}" type="text/javascript"> </script>
 
@@ -74,15 +119,21 @@
 
 <div class="row">
     <div class="col-12">
-        <textarea class="form-control" rows=5 id="notes">{{ session.notes|default_if_none:"" }}</textarea>
+        <textarea class="form-control" rows=3 id="notes">{{ session.notes|default_if_none:"" }}</textarea>
     </div>
 </div>
 
-<br>
+{% else %}
 
 <div class="row">
-    <div class="col-12">    
-        <button id="modifyNotes" class="btn btn-outline-info btn-block">Modify Notes</button>
+    <div class="col-12">
+        <h4>Notes</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <p>{{ session.notes }}</p>
     </div>
 </div>
 

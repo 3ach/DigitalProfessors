@@ -11,6 +11,7 @@ from django.views.generic import FormView, RedirectView, TemplateView, UpdateVie
 from tutoring.models import Tutor, Client, Session
 from tutoring.forms import SessionForm
 from users.models import User
+from decimal import Decimal
 
 @method_decorator(login_required, name='dispatch')
 class ManagerDashboardView(TemplateView):
@@ -116,3 +117,14 @@ class SessionNoteUpdate(View):
         session.save()
 
         return HttpResponse(status=200)
+
+class SessionPaymentUpdate(View):
+    def post(self, request, session_id):
+        payment = request.POST['payment']
+        session = Session.objects.get(id=session_id)
+
+        session.paid += Decimal(payment)
+        session.save()
+
+        return HttpResponse(status=200)
+

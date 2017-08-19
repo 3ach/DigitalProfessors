@@ -21,6 +21,10 @@ class Session(models.Model):
     paid = models.DecimalField(max_digits=12, decimal_places=2)
     notes = models.TextField(blank=True, null=True)
 
+    @property
+    def remaining(self):
+        return self.billed - self.paid
+
 class Client(models.Model):
     user = models.ForeignKey('users.User')
     address = models.TextField()
