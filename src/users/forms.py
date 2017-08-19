@@ -80,17 +80,31 @@ class ClientForm(UserForm):
                 client.wifi_password = self.cleaned_data['wifi_password']
 
             client.save()
+            
 
         return user
 
 
 class TutorForm(UserForm):
+    wage = forms.DecimalField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Wage'}))
 
+    def __init__(self, *args, **kwargs):
+        super(TutorForm, self).__init__(*args, **kwargs)
+
+        if kwargs['instance']:
+            tutor = Tutor.objects.get(user=kwargs['instance'])
+
+            self.initial['wage'] = tutor.wage
     def save(self, commit=True):
         user = super(TutorForm, self).save(commit)
 
         if commit:
-            tutor = Tutor.objects.create(user=user)
+            tutor, created = Tutor.objects.get_or_create(user=user)
+
+            if self.cleaned_data['wage']:
+                tutor.wage = self.cleaned_data['wage']
+
             tutor.save()
 
         return user

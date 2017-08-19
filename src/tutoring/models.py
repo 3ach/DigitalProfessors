@@ -42,8 +42,8 @@ class Session(models.Model):
 
 class Client(models.Model):
     user = models.ForeignKey('users.User')
-    address = models.TextField()
-    phone = models.DecimalField(max_digits=10, decimal_places=0)
+    address = models.TextField(blank=True, null=True)
+    phone = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     website = models.URLField(blank=True, null=True)
     wifi_ssid = models.TextField(max_length=128, blank=True, null=True)
     wifi_password = models.TextField(max_length=128, blank=True, null=True)
@@ -80,7 +80,7 @@ class Client(models.Model):
         return super(Client, self).save(*args, **kwargs)
 
 class Tutor(models.Model):
-    wage = models.DecimalField(max_digits=12, decimal_places=2)
+    wage = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     user = models.ForeignKey("users.User")
 
     def __str__(self):
