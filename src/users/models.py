@@ -29,8 +29,17 @@ class User(AbstractUser):
     @property
     def nav_links(self):
         return self._userlevel({
-            'client': [],
+            'client': [
+                {
+                    "name": "Accounting",
+                    "url": "accounting"
+                },
+            ],
             'tutor': [
+                {
+                    "name": "Accounting",
+                    "url": "accounting"
+                },
                 {
                     "name": "Clients",
                     "url": "clients"
@@ -58,4 +67,12 @@ class User(AbstractUser):
             'client': reverse_lazy('client-dashboard'),
             'tutor': reverse_lazy('tutor-dashboard'),
             'manager': reverse_lazy('manager-dashboard')
+        })
+
+    @property
+    def accounting(self):
+        return self._userlevel({
+            'client': reverse_lazy('client-accounting'),
+            'tutor': reverse_lazy('tutor-accounting'),
+            'manager': reverse_lazy('manager-accounting')
         })

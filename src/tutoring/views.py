@@ -1,5 +1,6 @@
 from django.contrib.auth import REDIRECT_FIELD_NAME, login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -24,8 +25,44 @@ class ManagerDashboardView(TemplateView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class AccountingView(TemplateView):
-    template_name = "tutoring/accounting.html"
+class AccountingView(RedirectView):
+    """
+    Redirects the user to the appropriate dashboard
+    """
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        user = self.request.user
+
+        return user.accounting
+
+@method_decorator(login_required, name='dispatch')
+class ManagerAccountingView(TemplateView):
+    template_name = 'tutoring/accounting-manager.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManagerAccountingView, self).get_context_data(**kwargs)
+
+        aggregates = Session.objects.all().aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
+
+        context['billed'] = aggregates['billed__sum']
+        context['received'] = aggregates['paid__sum']
+        context['due'] = context['billed'] - context['received']
+        context['gross'] = context['billed']
+        context['owed'] = aggregates['earnings__sum']
+        context['paid'] = aggregates['earnings_paid__sum']
+        context['earnings_due'] = context['owed'] - context['paid']
+        context['net'] = context['gross'] - context['owed']
+        
+        return context
+
+@method_decorator(login_required, name='dispatch')
+class TutorAccountingView(TemplateView):
+    pass
+
+@method_decorator(login_required, name='dispatch')
+class ClientAccountingView(TemplateView):
+    pass
 
 @method_decorator(login_required, name='dispatch')
 class ClientsView(TemplateView):

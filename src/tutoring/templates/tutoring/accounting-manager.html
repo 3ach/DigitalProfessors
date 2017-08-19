@@ -1,0 +1,43 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+
+<div class="row pt-3 mb-sm-3">
+    <div class="col-6 col-sm-3 mb-3 mb-sm-0">
+        <h1 class="text-warning">${{ billed }}</h1>
+        <h5 class="text-warning">Billed</h5>
+    </div>
+    <div class="col-6 col-sm-3 mb-3 mb-sm-0">
+        <h1 class="text-info">${{ received }}</h1>
+        <h5 class="text-info">Received</h5>
+    </div>
+    <div class="col-6 col-sm-3 mb-3 mb-sm-0">
+        <h1 class="text-danger">${{ due }}</h1>
+        <h5 class="text-danger">Due</h5>
+    </div>
+    <div class="col-6 col-sm-3 mb-3 mb-sm-0">
+        <h1 class="text-primary">${{ gross }}</h1>
+        <h5 class="text-primary">Gross Profits</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6 col-sm-3 mb-3 mb-sm-0">
+        <h1 class="text-warning">${{ owed }}</h1>
+        <h5 class="text-warning">Owed</h5>
+    </div>
+    <div class="col-6 col-sm-3 mb-3 mb-sm-0">
+        <h1 class="text-info">${{ paid }}</h1>
+        <h5 class="text-info">Paid</h5>
+    </div>
+    <div class="col-6 col-sm-3 mb-3 mb-sm-0">
+        <h1 class="text-danger">${{ due }}</h1>
+        <h5 class="text-danger">To Pay</h5>
+    </div>
+    <div class="col-6 col-sm-3 mb-3 mb-sm-0">
+        <h1 class="text-success">${{ net }}</h1>
+        <h5 class="text-success">Net Profits</h5>
+    </div>
+</div>
+<hr>
+
+{% endblock %}

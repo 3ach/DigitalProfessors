@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from tutoring.models import Session, Client, Tutor, SessionCategory
 
 
@@ -35,10 +36,13 @@ class SessionForm(forms.ModelForm):
 
     paid = forms.DecimalField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Paid'}))
+    
+    payment_method = forms.ChoiceField(widget=forms.Select(
+        attrs={'class': 'form-control'}), choices=settings.CHARGE_METHODS)
 
     class Media:
         js = ('js/session.js', )
 
     class Meta:
         model = Session
-        exclude = ()
+        exclude = ('earnings', 'earnings_paid', 'notes', )
