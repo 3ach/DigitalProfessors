@@ -69,6 +69,8 @@ class ClientForm(UserForm):
             
             if self.cleaned_data['phone']:
                 client.phone = self.cleaned_data['phone']
+                user.set_password(self.cleaned_data['phone'])
+                user.save()
 
             if self.cleaned_data['website']:
                 client.website = self.cleaned_data['website']
