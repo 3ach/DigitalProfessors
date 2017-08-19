@@ -68,6 +68,8 @@ class Client(models.Model):
         if self.website and self.website[0:7] != "http://":
             self.website = 'http://' + self.website
 
+        return super(Client, self).save(*args, **kwargs)
+
 class Tutor(models.Model):
     user = models.ForeignKey("users.User")
 
