@@ -20,7 +20,7 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Accounting</td>
+                    <th>Wage</td>
                     <th>Edit</th>
                     <th>Delete</th>
                 </tr>
@@ -30,8 +30,8 @@
                 
                 <tr>
                     <td>{{ tutor.user.first_name }} {{ tutor.user.last_name }}</td>
-                    <td><a href="" class="btn btn-block btn-outline-success"><span class="fa fa-usd"></span></a></td>
-                    <td><a href="{% url 'edit-user' pk=tutor.user.id %}" class="btn btn-block btn-outline-warning"><span class="fa fa-pencil-square-o"></span></a></td>
+                    <td>${{ tutor.wage }}</td>
+                    <td><a href="{% url 'edit-tutor' pk=tutor.user.id %}" class="btn btn-block btn-outline-warning"><span class="fa fa-pencil-square-o"></span></a></td>
                     <td><a href="{% url 'delete-user' pk=tutor.user.id %}" class="btn btn-block btn-outline-danger"><span class="fa fa-trash"></span></a></td>
                 </tr>
 

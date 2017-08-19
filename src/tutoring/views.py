@@ -70,8 +70,6 @@ class ClientAccountingView(TemplateView):
 class UserAccountingView(TemplateView):
     pass
 
-@method_decorator()
-
 @method_decorator(login_required, name='dispatch')
 class ClientsView(TemplateView):
     template_name = "tutoring/clients.html"

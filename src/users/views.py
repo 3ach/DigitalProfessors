@@ -27,6 +27,13 @@ class UpdateClientView(UpdateView):
     success_url = reverse_lazy('clients')
 
 @method_decorator(login_required, name='dispatch')
+class UpdateTutorView(UpdateView):
+    model = User
+    template_name = 'users/user-form.html'
+    form_class = TutorForm
+    success_url = reverse_lazy('tutors')
+
+@method_decorator(login_required, name='dispatch')
 class AddClientView(CreateView):
     model = User
     template_name = 'users/user-form.html'
