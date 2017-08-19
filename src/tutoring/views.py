@@ -41,26 +41,29 @@ class ManagerAccountingView(TemplateView):
         unpaid = Session.objects.exclude(billed=F('paid')).values('client').annotate(Sum('billed')).annotate(Sum('paid'))
         owed = Session.objects.exclude(earnings=F('earnings_paid')).values('tutor').annotate(Sum('earnings')).annotate(Sum('earnings_paid'))
 
-        for client in unpaid: 
-            client['client'] = Client.objects.get(id=client["client"])
-            client['total_owed'] = client['billed__sum'] - client['paid__sum']
+        try:
+            for client in unpaid: 
+                client['client'] = Client.objects.get(id=client["client"])
+                client['total_owed'] = client['billed__sum'] - client['paid__sum']
 
-        for tutor in owed:
-            tutor['tutor'] = Tutor.objects.get(id=tutor['tutor'])
-            tutor['total_owed'] = tutor['earnings__sum'] - tutor['earnings_paid__sum']
+            for tutor in owed:
+                tutor['tutor'] = Tutor.objects.get(id=tutor['tutor'])
+                tutor['total_owed'] = tutor['earnings__sum'] - tutor['earnings_paid__sum']
 
-        context['billed'] = aggregates['billed__sum']
-        context['received'] = aggregates['paid__sum']
-        context['due'] = context['billed'] - context['received']
-        context['gross'] = context['billed']
-        context['owed'] = aggregates['earnings__sum']
-        context['paid'] = aggregates['earnings_paid__sum']
-        context['earnings_due'] = context['owed'] - context['paid']
-        context['net'] = context['gross'] - context['owed']
-        context['unpaid'] = unpaid
-        context['tutorsOwed'] = owed
-        
-        return context
+            context['billed'] = aggregates['billed__sum']
+            context['received'] = aggregates['paid__sum']
+            context['due'] = context['billed'] - context['received']
+            context['gross'] = context['billed']
+            context['owed'] = aggregates['earnings__sum']
+            context['paid'] = aggregates['earnings_paid__sum']
+            context['earnings_due'] = context['owed'] - context['paid']
+            context['net'] = context['gross'] - context['owed']
+            context['unpaid'] = unpaid
+            context['tutorsOwed'] = owed
+            
+            return context
+        except TypeError:
+            return context
 
 @method_decorator(login_required, name='dispatch')
 class TutorAccountingView(TemplateView):
@@ -73,12 +76,15 @@ class TutorAccountingView(TemplateView):
         aggregates = Session.objects.filter(tutor__user=user.id).aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
         unpaid = Session.objects.filter(tutor__user=user).exclude(billed=F('paid'))
 
-        context['billed'] = aggregates['earnings__sum']
-        context['received'] = aggregates['earnings_paid__sum']
-        context['due'] = context['billed'] - context['received']
-        context['unpaid'] = unpaid
-        
-        return context
+        try:
+            context['billed'] = aggregates['earnings__sum']
+            context['received'] = aggregates['earnings_paid__sum']
+            context['due'] = context['billed'] - context['received']
+            context['unpaid'] = unpaid
+            
+            return context
+        except TypeError:
+            return context
 
 @method_decorator(login_required, name='dispatch')
 class ClientAccountingView(TemplateView):
@@ -91,12 +97,15 @@ class ClientAccountingView(TemplateView):
         aggregates = Session.objects.filter(client__user=user.id).aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
         unpaid = Session.objects.filter(client__user=user).exclude(billed=F('paid'))
 
-        context['billed'] = aggregates['billed__sum']
-        context['received'] = aggregates['paid__sum']
-        context['due'] = context['billed'] - context['received']
-        context['unpaid'] = unpaid
-        
-        return context
+        try:
+            context['billed'] = aggregates['billed__sum']
+            context['received'] = aggregates['paid__sum']
+            context['due'] = context['billed'] - context['received']
+            context['unpaid'] = unpaid
+            
+            return context
+        except TypeError:
+            return context
 
 @method_decorator(login_required, name='dispatch')
 class UserAccountingView(TemplateView):
