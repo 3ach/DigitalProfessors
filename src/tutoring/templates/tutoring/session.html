@@ -32,8 +32,18 @@
                             <h6>{{ session.client.address|linebreaks }}</h6>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <h6><span class="fa fa-phone"> </span> {{ session.client.formatted_phone }}</h6>
+                            <h6><span class="fa fa-laptop"> </span> <a href="{{ session.client.website }}">{{ session.client.website }}</a></h6>
+                        </div>
+                        <div class="col-6">
+                            <h6><span class="fa fa-wifi"> </span> {{ session.client.wifi_ssid }}</h6>
+                            <h6><span class="fa fa-key"> </span> {{ session.client.wifi_password }}</h6>
+                        </div>
+                    </div>
 
-                    {% if user.usertype == 'manager' %}
+                    <hr style="background-color: rgba(255, 255, 255, 0.65);">
                             
                     <div class="row">
                         <div class="col-4">
@@ -58,6 +68,8 @@
                             <p class="text-danger" style="margin-bottom: 0;">Balance</p>
                         </div>
                     </div>
+
+                    {% if user.usertype == 'manager' %}
 
                     <div class="row mt-2">
                         <div class="col-12">
@@ -90,6 +102,52 @@
                             {% endif %}
                         </div>
                     </div>
+
+                    <hr style="background-color: rgba(255, 255, 255, 0.65);">
+
+                    {% if user.usertype == 'tutor' or user.usertype == 'manager' %}
+                            
+                    <div class="row">
+                        <div class="col-4">
+                            <h5 class="text-warning" style="margin-bottom: 0;">${{ session.earnings }}</h5>
+                        </div>
+                        <div class="col-4">
+                            <h5 class="text-success" style="margin-bottom: 0;">${{ session.earnings_paid }}</h5>
+                        </div>
+                        <div class="col-4">
+                            <h5 class="text-danger" style="margin-bottom: 0;">${{ session.earnings_remaining }}</h5>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4">
+                            <p class="text-warning" style="margin-bottom: 0;">Earned</p>
+                        </div>
+                        <div class="col-4">
+                            <p class="text-success" style="margin-bottom: 0;">Paid</p>
+                        </div>
+                        <div class="col-4">
+                            <p class="text-danger" style="margin-bottom: 0;">Balance</p>
+                        </div>
+                    </div>
+
+                    {% if user.usertype == 'manager' %}
+
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" id="earnings" placeholder="Disbursement Amount" style="border-color: white;">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-success" id="modifyEarnings">Log</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endif %}
+
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -139,5 +197,6 @@
 
 {% endif %}
 
+<br>
 
 {% endblock %}

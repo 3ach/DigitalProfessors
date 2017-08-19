@@ -128,3 +128,13 @@ class SessionPaymentUpdate(View):
 
         return HttpResponse(status=200)
 
+class SessionEarningsUpdate(View):
+    def post(self, request, session_id):
+        payment = request.POST['payment']
+        session = Session.objects.get(id=session_id)
+
+        session.earnings_paid += Decimal(payment)
+        session.save()
+
+        return HttpResponse(status=200)
+

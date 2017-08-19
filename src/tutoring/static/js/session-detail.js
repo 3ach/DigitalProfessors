@@ -24,5 +24,22 @@ function updateAccounting() {
     }
 }
 
+function updateEarnings() {
+    let payment = $('#earnings').val();
+    let id = $('#sessionId').val();
+    let csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+
+    payment = parseFloat(payment).toFixed(2);
+
+    console.log(payment);
+
+    if(payment) {
+        $.post('/session/' + id + '/earnings', { payment: payment, csrfmiddlewaretoken: csrfToken }, (data, ts, jqxhr) => {
+            window.location.reload();
+        });
+    }
+}
+
 $(document).on('click', '#modifyNotes', saveNotes);
 $(document).on('click', '#modifyPayment', updateAccounting);
+$(document).on('click', '#modifyEarnings', updateEarnings);

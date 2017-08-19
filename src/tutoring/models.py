@@ -19,11 +19,17 @@ class Session(models.Model):
     hourly = models.DecimalField(max_digits=12, decimal_places=2)
     billed = models.DecimalField(max_digits=12, decimal_places=2)
     paid = models.DecimalField(max_digits=12, decimal_places=2)
+    earnings = models.DecimalField(max_digits=12, decimal_places=2)
+    earnings_paid = models.DecimalField(max_digits=12, decimal_places=2)
     notes = models.TextField(blank=True, null=True)
 
     @property
     def remaining(self):
         return self.billed - self.paid
+
+    @property
+    def earnings_remaining(self):
+        return self.earnings - self.earnings_paid
 
 class Client(models.Model):
     user = models.ForeignKey('users.User')
@@ -50,6 +56,17 @@ class Client(models.Model):
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name
 
+    @property
+    def formatted_phone(self):
+        phone = str(self.phone)
+        if len(phone) != 10:
+            return self.phone
+
+        return '(' + phone[0:3] + ') ' + phone[3:6] + '-' + phone[6:]
+
+    def save(self, *args, **kwargs):
+        if self.website and self.website[0:7] != "http://":
+            self.website = 'http://' + self.website
 
 class Tutor(models.Model):
     user = models.ForeignKey("users.User")

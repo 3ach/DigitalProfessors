@@ -10,6 +10,7 @@ dashboards = [
 ]
 
 urlpatterns = [
+    url(r'^session/(?P<session_id>[0-9]+)/earnings', views.SessionEarningsUpdate.as_view(), name="session-notes"),
     url(r'^session/(?P<session_id>[0-9]+)/payment', views.SessionPaymentUpdate.as_view(), name="session-notes"),
     url(r'^session/(?P<session_id>[0-9]+)/notes', views.SessionNoteUpdate.as_view(), name="session-notes"),
     url(r'^session/(?P<session_id>[0-9]+)/', views.SessionView.as_view(), name="session-detail"),
