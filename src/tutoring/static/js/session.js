@@ -10,7 +10,11 @@ function updateBilled() {
         let difference = end_dt - start_dt;
         let hours = difference / (1000 * 60 * 60);
         let billed = hours * hourly;
-        
+
+        if(billed < 30) {
+            billed = 30;
+        }
+
         billed = billed.toFixed(2);
 
         $('#id_billed').val(billed);
