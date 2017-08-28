@@ -57,6 +57,10 @@ class User(AbstractUser):
                 {
                     "name": "Professors",
                     "url": "professors"
+                },
+                {
+                    "name": "Admin",
+                    "url": "admin:index"
                 }
             ]
         })
