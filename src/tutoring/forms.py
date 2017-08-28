@@ -29,7 +29,7 @@ class SessionForm(forms.ModelForm):
         attrs={'class': 'form-control', 'placeholder': 'Distance'}))
 
     hourly = forms.DecimalField(widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Hourly Rate', 'type': 'number'}))
+        attrs={'class': 'form-control', 'placeholder': 'Hourly Rate', 'type': 'number'}), initial=50)
 
     billed = forms.DecimalField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Billed', 'readonly': 'readonly'}))
