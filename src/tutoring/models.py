@@ -38,6 +38,9 @@ class Session(models.Model):
         duration = datetime.combine(date.today(), self.end_time) - datetime.combine(date.today(), self.start_time)
         self.earnings = Decimal(duration.total_seconds() / (60 * 60)) * self.professor.wage
 
+        if self.earnings < 15:
+            self.earnings = 15
+
         return super(Session, self).save(*args, **kwargs)
 
 class Client(models.Model):
