@@ -28,7 +28,10 @@
                 {% for link in user.nav_links %}
                 <a class="nav-item nav-link" href="{% url link.url %}">{{ link.name }}</a> {% endfor %}
             </div>
-            <a class="btn btn-outline-danger my-2 my-md-0 mr-2" href="{% url 'logout' %}">Logout</a>
+            <div class="my-2 my-md-0 mr-2">
+                <a href="{% url 'add-session' %}" class="btn btn-outline-success"><span class="fa fa-plus"> </span>&nbsp; Add Session</a>
+                <a class="btn btn-outline-danger" href="{% url 'logout' %}">Logout</a>
+            </div>
         </div>
     </nav>
 
