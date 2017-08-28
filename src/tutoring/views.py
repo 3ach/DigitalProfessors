@@ -10,7 +10,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import FormView, RedirectView, TemplateView, UpdateView, DeleteView, CreateView, View
-from tutoring.models import Tutor, Client, Session
+from tutoring.models import Professor, Client, Session
 from tutoring.forms import SessionForm
 from users.models import User
 from csv import DictReader
@@ -47,16 +47,16 @@ class ManagerAccountingView(TemplateView):
 
         aggregates = base.aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
         unpaid = base.exclude(billed=F('paid')).values('client').annotate(Sum('billed')).annotate(Sum('paid'))
-        owed = base.exclude(earnings=F('earnings_paid')).values('tutor').annotate(Sum('earnings')).annotate(Sum('earnings_paid'))
+        owed = base.exclude(earnings=F('earnings_paid')).values('professor').annotate(Sum('earnings')).annotate(Sum('earnings_paid'))
 
         try:
             for client in unpaid: 
                 client['client'] = Client.objects.get(id=client["client"])
                 client['total_owed'] = client['billed__sum'] - client['paid__sum']
 
-            for tutor in owed:
-                tutor['tutor'] = Tutor.objects.get(id=tutor['tutor'])
-                tutor['total_owed'] = tutor['earnings__sum'] - tutor['earnings_paid__sum']
+            for professor in owed:
+                professor['professor'] = Professor.objects.get(id=professor['professor'])
+                professor['total_owed'] = professor['earnings__sum'] - professor['earnings_paid__sum']
 
             context['billed'] = aggregates['billed__sum']
             context['received'] = aggregates['paid__sum']
@@ -67,20 +67,20 @@ class ManagerAccountingView(TemplateView):
             context['earnings_due'] = context['owed'] - context['paid']
             context['net'] = context['gross'] - context['owed']
             context['unpaid'] = unpaid
-            context['tutorsOwed'] = owed
+            context['professorsOwed'] = owed
             
             return context
         except TypeError:
             return context
 
 @method_decorator(login_required, name='dispatch')
-class TutorAccountingView(TemplateView):
-    template_name = 'tutoring/accounting-tutor.html'
+class ProfessorAccountingView(TemplateView):
+    template_name = 'tutoring/accounting-professor.html'
     
 
     def get_context_data(self, **kwargs):
         user = self.request.user
-        context = super(TutorAccountingView, self).get_context_data(**kwargs)
+        context = super(ProfessorAccountingView, self).get_context_data(**kwargs)
 
         if 'start' in self.request.GET and 'end' in self.request.GET:
             start = self.request.GET['start']
@@ -90,8 +90,8 @@ class TutorAccountingView(TemplateView):
         else:
             base = Session.objects.all()        
 
-        aggregates = base.filter(tutor__user=user.id).aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
-        unpaid = base.filter(tutor__user=user).exclude(billed=F('paid'))
+        aggregates = base.filter(professor__user=user.id).aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
+        unpaid = base.filter(professor__user=user).exclude(billed=F('paid'))
 
         try:
             context['billed'] = aggregates['earnings__sum']
@@ -147,23 +147,23 @@ class ClientsView(TemplateView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class TutorsView(TemplateView):
-    template_name = "tutoring/tutors.html"
+class ProfessorsView(TemplateView):
+    template_name = "tutoring/professors.html"
 
     def get_context_data(self, **kwargs):
-        context = super(TutorsView, self).get_context_data(**kwargs)
-        context["tutors"] = Tutor.objects.all().order_by('user__last_name')
+        context = super(ProfessorsView, self).get_context_data(**kwargs)
+        context["professors"] = Professor.objects.all().order_by('user__last_name')
 
         return context
 
 @method_decorator(login_required, name='dispatch')
-class TutorDashboardView(TemplateView):
+class ProfessorDashboardView(TemplateView):
     template_name = "tutoring/dashboard.html"
 
     def get_context_data(self, **kwargs):
         user = self.request.user
-        context = super(TutorDashboardView, self).get_context_data(**kwargs)
-        context["sessions"] = Session.objects.filter(tutor__user=user).order_by('-date')
+        context = super(ProfessorDashboardView, self).get_context_data(**kwargs)
+        context["sessions"] = Session.objects.filter(professor__user=user).order_by('-date')
 
         return context
 

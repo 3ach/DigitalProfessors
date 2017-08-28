@@ -95,7 +95,7 @@
 
     <div class="col-12 col-sm-6">
         <h4>Owed to Employees</h4>
-        {% if tutorsOwed|length > 0 %}
+        {% if professorsOwed|length > 0 %}
 
         <table class="table table-striped">
             <thead>
@@ -105,12 +105,12 @@
                 </tr>
             </thead>
             <tbody>
-                {% for tutor in tutorsOwed %}
+                {% for professor in professorsOwed %}
                 
                 <tr>
-                    <!-- <td><a href="{% url 'accounting-detail' user_id=tutor.tutor.user.id %}">{{ tutor.tutor.user.first_name }} {{ tutor.tutor.user.last_name }}</a></td> -->
-                    <td>{{ tutor.tutor.user.first_name }} {{ tutor.tutor.user.last_name }}</td>
-                    <td><span class="text-danger">${{ tutor.total_owed }}</span></td>
+                    <!-- <td><a href="{% url 'accounting-detail' user_id=professor.professor.user.id %}">{{ professor.professor.user.first_name }} {{ professor.professor.user.last_name }}</a></td> -->
+                    <td>{{ professor.professor.user.first_name }} {{ professor.professor.user.last_name }}</td>
+                    <td><span class="text-danger">${{ professor.total_owed }}</span></td>
                 </tr>
 
                 {% endfor %}

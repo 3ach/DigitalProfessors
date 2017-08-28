@@ -14,8 +14,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name='sessiontutor',
-            name='tutor',
+            model_name='sessionprofessor',
+            name='professor',
         ),
         migrations.AddField(
             model_name='session',
@@ -25,10 +25,10 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='session',
-            name='tutor',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tutoring.Tutor'),
+            name='professor',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tutoring.Professor'),
         ),
         migrations.DeleteModel(
-            name='SessionTutor',
+            name='SessionProfessor',
         ),
     ]

@@ -14,16 +14,16 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='SessionTutor',
+            name='SessionProfessor',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('earned', models.DecimalField(decimal_places=2, max_digits=12)),
-                ('tutor', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tutoring.Tutor')),
+                ('professor', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tutoring.Professor')),
             ],
         ),
         migrations.AlterField(
             model_name='session',
-            name='tutor',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tutoring.SessionTutor'),
+            name='professor',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tutoring.SessionProfessor'),
         ),
     ]

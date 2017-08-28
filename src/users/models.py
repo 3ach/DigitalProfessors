@@ -1,15 +1,15 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import SuspiciousOperation
 from django.urls import reverse_lazy
-from tutoring.models import Tutor, Client
+from tutoring.models import Professor, Client
 
 
 class User(AbstractUser): 
     def _userlevel(self, result):
         if self.is_staff:
             return result['manager']
-        elif Tutor.objects.filter(user=self).exists():
-            return result['tutor']
+        elif Professor.objects.filter(user=self).exists():
+            return result['professor']
         elif Client.objects.filter(user=self).exists():
             return result['client']
         else:
@@ -19,8 +19,8 @@ class User(AbstractUser):
     def usertype(self):
         if self.is_staff:
             return 'manager'
-        elif Tutor.objects.filter(user=self).exists():
-            return 'tutor'
+        elif Professor.objects.filter(user=self).exists():
+            return 'professor'
         elif Client.objects.filter(user=self).exists():
             return 'client'
         else:
@@ -35,7 +35,7 @@ class User(AbstractUser):
                     "url": "accounting"
                 },
             ],
-            'tutor': [
+            'professor': [
                 {
                     "name": "Accounting",
                     "url": "accounting"
@@ -55,8 +55,8 @@ class User(AbstractUser):
                     "url": "clients"
                 },
                 {
-                    "name": "Tutors",
-                    "url": "tutors"
+                    "name": "Professors",
+                    "url": "professors"
                 }
             ]
         })
@@ -65,7 +65,7 @@ class User(AbstractUser):
     def dashboard(self):
         return self._userlevel({
             'client': reverse_lazy('client-dashboard'),
-            'tutor': reverse_lazy('tutor-dashboard'),
+            'professor': reverse_lazy('professor-dashboard'),
             'manager': reverse_lazy('manager-dashboard')
         })
 
@@ -73,6 +73,6 @@ class User(AbstractUser):
     def accounting(self):
         return self._userlevel({
             'client': reverse_lazy('client-accounting'),
-            'tutor': reverse_lazy('tutor-accounting'),
+            'professor': reverse_lazy('professor-accounting'),
             'manager': reverse_lazy('manager-accounting')
         })

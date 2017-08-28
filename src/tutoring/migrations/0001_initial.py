@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Tutor',
+            name='Professor',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='session',
-            name='tutor',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tutoring.Tutor'),
+            name='professor',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tutoring.Professor'),
         ),
     ]

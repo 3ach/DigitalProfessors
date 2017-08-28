@@ -90,12 +90,12 @@
 
         <div class="col-12 col-sm-6">
             <div class="card card-inverse" style="background: #333">
-                <h4 class="card-header">Tutor</h4>
+                <h4 class="card-header">Professor</h4>
                 <div class="card-block">
                     <div class="row">
                         <div class="col-12"> 
-                            <h5>{{ session.tutor.user.first_name }} {{ session.tutor.user.last_name }}</h5>
-                            {% if user.usertype == 'manager' or user.usertype == 'tutor' %}
+                            <h5>{{ session.professor.user.first_name }} {{ session.professor.user.last_name }}</h5>
+                            {% if user.usertype == 'manager' or user.usertype == 'professor' %}
                             
                             <h6>{{ session.distance }} miles traveled</h6>
 
@@ -104,7 +104,7 @@
                     </div>
 
 
-                    {% if user.usertype == 'tutor' or user.usertype == 'manager' %}
+                    {% if user.usertype == 'professor' or user.usertype == 'manager' %}
                     <hr style="background-color: rgba(255, 255, 255, 0.65);">
                             
                     <div class="row">
@@ -159,7 +159,7 @@
 
 
 
-{% if user.usertype == 'manager' or user.usertype == 'tutor' %}
+{% if user.usertype == 'manager' or user.usertype == 'professor' %}
 
 <div class="row mb-2">
     <div class="col-6">

@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='tutor',
+            model_name='professor',
             name='wage',
             field=models.DecimalField(decimal_places=2, default=0, max_digits=12),
         ),

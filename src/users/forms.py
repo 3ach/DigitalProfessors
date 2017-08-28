@@ -1,6 +1,6 @@
 from django import forms
 from tutoring.models import Client
-from users.models import User, Tutor
+from users.models import User, Professor
 
 
 class LoginForm(forms.Form):
@@ -87,7 +87,7 @@ class ClientForm(UserForm):
         return user
 
 
-class TutorForm(UserForm):
+class ProfessorForm(UserForm):
     wage = forms.DecimalField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Wage'}))
     
@@ -96,26 +96,26 @@ class TutorForm(UserForm):
     ))
 
     def __init__(self, *args, **kwargs):
-        super(TutorForm, self).__init__(*args, **kwargs)
+        super(ProfessorForm, self).__init__(*args, **kwargs)
 
         if kwargs['instance']:
-            tutor = Tutor.objects.get(user=kwargs['instance'])
+            professor = Professor.objects.get(user=kwargs['instance'])
 
-            self.initial['wage'] = tutor.wage
+            self.initial['wage'] = professor.wage
 
     def save(self, commit=True):
-        user = super(TutorForm, self).save(commit)
+        user = super(ProfessorForm, self).save(commit)
 
         if self.cleaned_data['password']:
             user.set_password(self.cleaned_data['password'])
             user.save()
 
         if commit:
-            tutor, created = Tutor.objects.get_or_create(user=user)
+            professor, created = Professor.objects.get_or_create(user=user)
 
             if self.cleaned_data['wage']:
-                tutor.wage = self.cleaned_data['wage']
+                professor.wage = self.cleaned_data['wage']
 
-            tutor.save()
+            professor.save()
 
         return user

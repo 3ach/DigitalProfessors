@@ -12,7 +12,7 @@ class SessionCategory(models.Model):
 
 class Session(models.Model):
     client = models.ForeignKey("Client")
-    tutor = models.ForeignKey("Tutor")
+    professor = models.ForeignKey("Professor")
     category = models.ForeignKey("SessionCategory")
     date = models.DateField()
     start_time = models.TimeField()
@@ -36,7 +36,7 @@ class Session(models.Model):
 
     def save(self, *args, **kwargs):
         duration = datetime.combine(date.today(), self.end_time) - datetime.combine(date.today(), self.start_time)
-        self.earnings = Decimal(duration.total_seconds() / (60 * 60)) * self.tutor.wage
+        self.earnings = Decimal(duration.total_seconds() / (60 * 60)) * self.professor.wage
 
         return super(Session, self).save(*args, **kwargs)
 
@@ -79,7 +79,7 @@ class Client(models.Model):
 
         return super(Client, self).save(*args, **kwargs)
 
-class Tutor(models.Model):
+class Professor(models.Model):
     wage = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     user = models.ForeignKey("users.User")
 

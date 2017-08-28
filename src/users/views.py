@@ -8,8 +8,8 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import FormView, RedirectView, TemplateView, UpdateView, DeleteView, CreateView
 from django.shortcuts import render, redirect
-from tutoring.models import Tutor, Client, Session
-from users.forms import LoginForm, UserForm, ClientForm, TutorForm
+from tutoring.models import Professor, Client, Session
+from users.forms import LoginForm, UserForm, ClientForm, ProfessorForm
 from users.models import User
 
 @method_decorator(login_required, name='dispatch')
@@ -27,11 +27,11 @@ class UpdateClientView(UpdateView):
     success_url = reverse_lazy('clients')
 
 @method_decorator(login_required, name='dispatch')
-class UpdateTutorView(UpdateView):
+class UpdateProfessorView(UpdateView):
     model = User
     template_name = 'users/user-form.html'
-    form_class = TutorForm
-    success_url = reverse_lazy('tutors')
+    form_class = ProfessorForm
+    success_url = reverse_lazy('professors')
 
 @method_decorator(login_required, name='dispatch')
 class AddClientView(CreateView):
@@ -41,11 +41,11 @@ class AddClientView(CreateView):
     success_url = reverse_lazy('clients')
 
 @method_decorator(login_required, name='dispatch')
-class AddTutorView(CreateView):
+class AddProfessorView(CreateView):
     model = User
     template_name = 'users/user-form.html'
-    form_class = TutorForm
-    success_url = reverse_lazy('tutors')
+    form_class = ProfessorForm
+    success_url = reverse_lazy('professors')
 
 @method_decorator(login_required, name='dispatch')
 class DeleteUserView(DeleteView):
