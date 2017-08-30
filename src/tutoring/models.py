@@ -36,7 +36,9 @@ class Session(models.Model):
 
     def save(self, *args, **kwargs):
         duration = datetime.combine(date.today(), self.end_time) - datetime.combine(date.today(), self.start_time)
-        self.earnings = Decimal(duration.total_seconds() / (60 * 60)) * self.professor.wage
+        hours = duration.total_seconds() / (60 * 60)
+        hours = round(hours * 2) / 2
+        self.earnings = Decimal(hours) * self.professor.wage
 
         if self.earnings < 15:
             self.earnings = 15
