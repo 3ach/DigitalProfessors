@@ -36,13 +36,13 @@ class ClientForm(UserForm):
     phone = forms.IntegerField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Phone Number'}
     ))
-    website = forms.CharField(max_length=128, widget=forms.TextInput(
+    website = forms.CharField(max_length=128, required=False, widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Website'}
     ))
-    wifi_ssid = forms.CharField(max_length=128, widget=forms.TextInput(
+    wifi_ssid = forms.CharField(max_length=128, required=False, widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Wi-Fi SSID'}
     ))
-    wifi_password = forms.CharField(max_length=128, widget=forms.TextInput(
+    wifi_password = forms.CharField(max_length=128, required=False, widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Wi-Fi Password'}
     ))
 
