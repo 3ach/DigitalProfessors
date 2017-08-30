@@ -230,7 +230,7 @@ class CSVUploadView(TemplateView):
     def post(self, request):
         post = request.POST
         csvfile = request.FILES['csvFile'].file
-        csvfile = csvfile.read().decode('utf8')
+        csvfile = csvfile.read().decode('utf8', 'ignore')
         headers = json.loads(request.POST['headers'])
 
         reader = DictReader(io.StringIO(csvfile), headers);
