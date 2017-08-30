@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import FormView, RedirectView, TemplateView, UpdateView, DeleteView, CreateView, View
 from tutoring.models import Professor, Client, Session
-from tutoring.forms import SessionForm
+from tutoring.forms import SessionForm, ContactForm
 from users.models import User
 from csv import DictReader
 from decimal import Decimal
@@ -48,6 +48,10 @@ class ManagerAccountingView(TemplateView):
         aggregates = base.aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
         unpaid = base.exclude(billed=F('paid')).values('client').annotate(Sum('billed')).annotate(Sum('paid'))
         owed = base.exclude(earnings=F('earnings_paid')).values('professor').annotate(Sum('earnings')).annotate(Sum('earnings_paid'))
+        
+        cash_gross = base.filter(payment_method="CASH").aggregate(Sum('billed'))
+        credit_gross = base.filter(payment_method="CRDT").aggregate(Sum('billed'))
+        check_gross = base.filter(payment_method="CHCK").aggregate(Sum('billed'))
 
         try:
             for client in unpaid: 
@@ -61,11 +65,13 @@ class ManagerAccountingView(TemplateView):
             context['billed'] = aggregates['billed__sum']
             context['received'] = aggregates['paid__sum']
             context['due'] = context['billed'] - context['received']
-            context['gross'] = context['billed']
+            context['gross_check'] = check_gross['billed__sum'] if check_gross['billed__sum'] is not None else 0
+            context['gross_cash'] = cash_gross['billed__sum'] if cash_gross['billed__sum'] is not None else 0
+            context['gross_credit'] = credit_gross['billed__sum'] if credit_gross['billed__sum'] is not None else 0
             context['owed'] = aggregates['earnings__sum']
             context['paid'] = aggregates['earnings_paid__sum']
             context['earnings_due'] = context['owed'] - context['paid']
-            context['net'] = context['gross'] - context['owed']
+            context['net'] = context['billed'] - context['owed']
             context['unpaid'] = unpaid
             context['professorsOwed'] = owed
             
@@ -137,6 +143,19 @@ class UserAccountingView(TemplateView):
     pass
 
 @method_decorator(login_required, name='dispatch')
+class ProfessorSessionsView(TemplateView):
+    template_name = 'tutoring/professor-sessions.html'
+
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        context = super(ProfessorSessionsView, self).get_context_data(**kwargs)
+        professor = Professor.objects.get(id=kwargs['professor_id'])
+        context["professor"] = professor
+        context["sessions"] = Session.objects.filter(professor=professor).order_by('-date')
+
+        return context
+
+@method_decorator(login_required, name='dispatch')
 class ClientsView(TemplateView):
     template_name = "tutoring/clients.html"
 
@@ -198,6 +217,7 @@ class SessionView(TemplateView):
         session = Session.objects.get(id=session_id)
 
         context = super(SessionView, self).get_context_data(**kwargs)
+        context['form'] = ContactForm()
         context['session'] = session
         
         return context

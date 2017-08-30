@@ -129,7 +129,6 @@ STATIC_URL = '/static/'
 LOGIN_URL = '/users/login/'
 
 CHARGE_METHODS = (
-    ('', 'Select Payment Method', ),
     ('CRDT', 'Credit Card', ),
     ('CHCK', 'Check', ),
     ('CASH', 'Cash', ),

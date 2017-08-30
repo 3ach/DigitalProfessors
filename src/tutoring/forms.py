@@ -2,6 +2,8 @@ from django import forms
 from django.conf import settings
 from tutoring.models import Session, Client, Professor, SessionCategory
 
+class ContactForm(forms.Form):
+    message = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Have a question?', 'rows': 2}))
 
 class SessionForm(forms.ModelForm):
     client = forms.ModelChoiceField(queryset=Client.objects.all(), empty_label="Select Client", widget=forms.Select(

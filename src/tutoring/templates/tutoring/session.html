@@ -190,15 +190,22 @@
 {% else %}
 
 <div class="row">
-    <div class="col-12">
+    <div class="col-12 col-sm-6">
         <h4>Notes</h4>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-12">
         <p>{{ session.notes }}</p>
     </div>
+    <div class="col-12 col-sm-6">
+        <h4>Contact</h4>
+        {% for field in form %}
+            {{ field.errors }}
+            {{ field }}
+        {% endfor %}
+    </div>
+    <div class="col-12 col-sm-6 offset-sm-6">
+        <br>
+        <input type="submit" value="Send" class="btn btn-primary btn-block" />
+    </div>
+            
 </div>
 
 {% endif %}

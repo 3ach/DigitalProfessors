@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^session/(?P<session_id>[0-9]+)/notes', views.SessionNoteUpdate.as_view(), name="session-notes"),
     url(r'^session/(?P<session_id>[0-9]+)/', views.SessionView.as_view(), name="session-detail"),
     url(r'^clients', views.ClientsView.as_view(), name="clients"),
+    url(r'^professors/(?P<professor_id>[0-9]+)/sessions', views.ProfessorSessionsView.as_view(), name='professor-sessions'),
     url(r'^professors', views.ProfessorsView.as_view(), name="professors"),
     url(r'^sessions/new', views.CreateSessionView.as_view(), name="add-session"),
     url(r'^csv/', views.CSVUploadView.as_view(), name="csv-upload"),

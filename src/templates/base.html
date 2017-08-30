@@ -22,7 +22,7 @@
             aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-        <a class="navbar-brand" href="/">Digital Professors</a>
+        <a class="navbar-brand" href="/">Digital Professors | <strong>{{ user.usertype|title }}</strong></a>
         <div class="navbar-collapse collapse" id="navbar">
             <div class="navbar-nav mr-auto">
                 {% for link in user.nav_links %}
@@ -31,20 +31,13 @@
             <div class="my-2 my-md-0 mr-2">
                 {% if user.usertype != 'client' %}
                 <a href="{% url 'add-session' %}" class="btn btn-outline-success"><span class="fa fa-plus"> </span>&nbsp; Add Session</a>
-                <a class="btn btn-outline-danger" href="{% url 'logout' %}">Logout</a>
                 {% endif %}
+                <a class="btn btn-outline-danger" href="{% url 'logout' %}">Logout</a>
             </div>
         </div>
     </nav>
 
     <div class="container" style="margin-top: 60px">
-        <div class="col-12">
-            <br>
-            <div class="alert alert-info" role="alert">
-                This is the <strong>{{ user.usertype }} </strong> view.
-            </div>
-        </div>
-
     
     {% endif %} 
 
