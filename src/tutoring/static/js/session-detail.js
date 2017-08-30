@@ -15,8 +15,6 @@ function updateAccounting() {
 
     payment = parseFloat(payment).toFixed(2);
 
-    console.log(payment);
-
     if(payment) {
         $.post('/session/' + id + '/payment', { payment: payment, csrfmiddlewaretoken: csrfToken }, (data, ts, jqxhr) => {
             window.location.reload();
@@ -30,8 +28,6 @@ function updateEarnings() {
     let csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
 
     payment = parseFloat(payment).toFixed(2);
-
-    console.log(payment);
 
     if(payment) {
         $.post('/session/' + id + '/earnings', { payment: payment, csrfmiddlewaretoken: csrfToken }, (data, ts, jqxhr) => {

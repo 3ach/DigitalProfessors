@@ -9,6 +9,7 @@ function updateBilled() {
         let end_dt = new Date(date + ' ' + end);
         let difference = end_dt - start_dt;
         let hours = difference / (1000 * 60 * 60);
+        hours = Math.round(hours * 2) / 2;
         let billed = hours * hourly;
 
         if(billed < 30) {

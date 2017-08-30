@@ -35,11 +35,17 @@
                     <div class="row">
                         <div class="col-6">
                             <h6><span class="fa fa-phone"> </span> {{ session.client.formatted_phone }}</h6>
+                            {% if session.client.website %}
                             <h6><span class="fa fa-laptop"> </span> <a href="{{ session.client.website }}">{{ session.client.website }}</a></h6>
+                            {% endif %}
                         </div>
                         <div class="col-6">
+                            {% if session.client.wifi_ssid %}
                             <h6><span class="fa fa-wifi"> </span> {{ session.client.wifi_ssid }}</h6>
+                            {% endif %}
+                            {% if session.client.wifi_password %}
                             <h6><span class="fa fa-key"> </span> {{ session.client.wifi_password }}</h6>
+                            {% endif %}
                         </div>
                     </div>
 
