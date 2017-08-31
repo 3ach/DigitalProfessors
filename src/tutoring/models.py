@@ -10,6 +10,9 @@ class SessionCategory(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = 'Session Categories'
+
 class Session(models.Model):
     client = models.ForeignKey("Client")
     professor = models.ForeignKey("Professor")
