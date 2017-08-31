@@ -5,6 +5,13 @@
 
 <div class="text-center">
 
+    {% if session.cancelled %}
+    <div class="row mb-2">
+        <div class="col-12">
+            <span class="h4 text-danger">Session Cancelled</span>
+        </div>
+    </div>
+    {% else %}
     <div class="row mb-2">
         <div class="col-12">
             <span class="h4">{{ session.date }}</span>
@@ -16,6 +23,7 @@
             <span class="h4">{{ session.start_time }} - {{ session.end_time }}</span>
         </div>
     </div>
+    {% endif %}
 
     <div class="row">
         <div class="col-12 col-sm-6 mb-3">
@@ -187,6 +195,18 @@
     </div>
 </div>
 
+{% if not session.cancelled %}
+<div class="row">
+    <div class="col-12">
+        <br>
+        <form class="form" action="{% url 'session-cancel' session_id=session.id %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-outline-danger btn-block" value="Cancel Session" />
+        </form>
+    </div>
+</div>
+{% endif %}
+
 {% else %}
 
 <div class="row">
@@ -205,7 +225,7 @@
         </div>
         <div class="col-12 col-sm-6 offset-sm-6">
             <br>
-            <input type="submit" value="Send" class="btn btn-primary btn-block" />
+            <input type="submit" value="Send" class="btn btn-outline-primary btn-block" />
         </div>
     </form> 
 </div>

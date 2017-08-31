@@ -25,6 +25,7 @@ class Session(models.Model):
     earnings = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     earnings_paid = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     notes = models.TextField(blank=True, null=True)
+    cancelled = models.BooleanField(default=False)
 
     @property
     def remaining(self):

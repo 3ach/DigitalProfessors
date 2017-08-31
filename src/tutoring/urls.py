@@ -18,9 +18,10 @@ accounting = [
 ]
 
 urlpatterns = [
-    url(r'^session/(?P<session_id>[0-9]+)/earnings', views.SessionEarningsUpdate.as_view(), name="session-notes"),
-    url(r'^session/(?P<session_id>[0-9]+)/payment', views.SessionPaymentUpdate.as_view(), name="session-notes"),
+    url(r'^session/(?P<session_id>[0-9]+)/earnings', views.SessionEarningsUpdate.as_view(), name="session-earnings"),
+    url(r'^session/(?P<session_id>[0-9]+)/payment', views.SessionPaymentUpdate.as_view(), name="session-payment"),
     url(r'^session/(?P<session_id>[0-9]+)/notes', views.SessionNoteUpdate.as_view(), name="session-notes"),
+    url(r'^session/(?P<session_id>[0-9]+)/cancel', views.CancelSessionView.as_view(), name="session-cancel"),
     url(r'^session/(?P<session_id>[0-9]+)/', views.SessionView.as_view(), name="session-detail"),
     url(r'^clients', views.ClientsView.as_view(), name="clients"),
     url(r'^professors/(?P<professor_id>[0-9]+)/sessions', views.ProfessorSessionsView.as_view(), name='professor-sessions'),

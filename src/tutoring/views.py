@@ -331,3 +331,10 @@ class SessionEarningsUpdate(View):
 
         return HttpResponse(status=200)
 
+class CancelSessionView(View):
+    def post(self, request, session_id):
+        session = Session.objects.get(id=session_id)
+        session.cancelled = True
+        session.save()
+
+        return redirect(reverse_lazy('session-detail', args=(session.id, )))
