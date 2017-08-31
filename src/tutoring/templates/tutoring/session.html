@@ -194,18 +194,20 @@
         <h4>Notes</h4>
         <p>{{ session.notes }}</p>
     </div>
-    <div class="col-12 col-sm-6">
-        <h4>Contact</h4>
-        {% for field in form %}
-            {{ field.errors }}
-            {{ field }}
-        {% endfor %}
-    </div>
-    <div class="col-12 col-sm-6 offset-sm-6">
-        <br>
-        <input type="submit" value="Send" class="btn btn-primary btn-block" />
-    </div>
-            
+    <form class="form" action="#" method="POST">
+        {% csrf_token %}
+        <div class="col-12">
+            <h4>Contact</h4>
+            {% for field in form %}
+                {{ field.errors }}
+                {{ field }}
+            {% endfor %}
+        </div>
+        <div class="col-12 col-sm-6 offset-sm-6">
+            <br>
+            <input type="submit" value="Send" class="btn btn-primary btn-block" />
+        </div>
+    </form> 
 </div>
 
 {% endif %}

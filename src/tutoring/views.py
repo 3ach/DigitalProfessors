@@ -1,5 +1,6 @@
 from django.contrib.auth import REDIRECT_FIELD_NAME, login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.db.models import Sum, F
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -221,6 +222,20 @@ class SessionView(TemplateView):
         context['session'] = session
         
         return context
+
+    def post(self, request, *args, **kwargs):
+        form = ContactForm(self.request.POST)
+
+        if form.is_valid():
+            send_mail(
+                'Client Question',
+                form.cleaned_data['message'],
+                'digitalprofessors@digitalprofessors.com',
+                ['josh.glyn@gmail.com'],
+                fail_silently=True,
+            )
+
+        return super(SessionView, self).get(request, *args, **kwargs)
 
 @method_decorator(login_required, name='dispatch')
 class CreateSessionView(CreateView):
