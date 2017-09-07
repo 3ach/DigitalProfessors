@@ -1,5 +1,7 @@
 {% extends 'base.html' %} 
 
+
+
 {% block content %}
 
 <br>
@@ -24,6 +26,7 @@
                     <th>Address</th>
                     <th>Edit</th>
                     <th>Delete</th>
+                    <th>Session</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +37,7 @@
                     <td>{{ client.address }}</td>
                     <td><a href="{% url 'edit-client' pk=client.user.id %}" class="btn btn-block btn-outline-warning"><span class="fa fa-pencil-square-o"></span></a></td>
                     <td><a href="{% url 'delete-user' pk=client.user.id %}" class="btn btn-block btn-outline-danger"><span class="fa fa-trash"></span></a></td>
+                    <td><a href="{% url 'add-session' %}?client={{ client.id }}" class="btn btn-block btn-outline-success"><span class="fa fa-plus"></span></a></td>
                 </tr>
 
                 {% endfor %}

@@ -47,4 +47,4 @@ class SessionForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        exclude = ('earnings', 'earnings_paid', 'notes', )
+        exclude = ('earnings', 'earnings_paid', 'notes', 'cancelled', )

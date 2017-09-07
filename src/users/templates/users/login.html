@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -7,7 +8,11 @@
     <br>
     <br>
     <div class="row">
-        <div class="col-sm-12 col-md-6 col-lg-4 offset-md-3 offset-lg-4">
+        <div class="col-sm-12 col-md-6 col-lg-4 offset-md-3 offset-lg-4 text-center">
+            <img src="{% static 'img/logo.jpg' %}" style="width: 100%"/>
+            <br>
+            <span class="text-muted">Welcome to the Digital Professors Portal</span>
+            <br>
             <div class="card card-inverse" style="background-color: #333; border-color: #333">
                 <div class="card-block">
                     <h4 class="card-title">Login</h4>
@@ -24,6 +29,7 @@
                     </div>
                 </div>
             </div>
+           <span class="text-muted" style="font-size: 10pt">Please login to see your session and payment history.<br>If you don't have a login, please call Digital Professors at (520) 344-0397.</span> 
         </div>
     </div>
 </div>

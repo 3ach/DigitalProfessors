@@ -66,9 +66,9 @@ class ManagerAccountingView(TemplateView):
             context['billed'] = aggregates['billed__sum']
             context['received'] = aggregates['paid__sum']
             context['due'] = context['billed'] - context['received']
-            context['gross_check'] = check_gross['billed__sum'] if check_gross['billed__sum'] is not None else 0
-            context['gross_cash'] = cash_gross['billed__sum'] if cash_gross['billed__sum'] is not None else 0
-            context['gross_credit'] = credit_gross['billed__sum'] if credit_gross['billed__sum'] is not None else 0
+            context['gross_check'] = check_gross['billed__sum'] if check_gross['billed__sum'] is not None else "0.00"
+            context['gross_cash'] = cash_gross['billed__sum'] if cash_gross['billed__sum'] is not None else "0.00"
+            context['gross_credit'] = credit_gross['billed__sum'] if credit_gross['billed__sum'] is not None else "0.00"
             context['owed'] = aggregates['earnings__sum']
             context['paid'] = aggregates['earnings_paid__sum']
             context['earnings_due'] = context['owed'] - context['paid']
@@ -246,6 +246,18 @@ class CreateSessionView(CreateView):
     def get_success_url(self):
         return reverse_lazy('session-detail', args=(self.object.id, ))
 
+    def get_initial(self):
+        initial = super(CreateSessionView, self).get_initial()
+
+        if 'client' in self.request.GET:
+            initial["client"] = self.request.GET["client"]
+
+
+        if 'professor' in self.request.GET:
+            initial["professor"] = self.request.GET["professor"]
+
+        return initial
+
 @method_decorator(login_required, name='dispatch')
 class DashboardView(RedirectView):
     """
@@ -335,6 +347,9 @@ class CancelSessionView(View):
     def post(self, request, session_id):
         session = Session.objects.get(id=session_id)
         session.cancelled = True
+        session.billed = 0
+        session.earnings = 0
+
         session.save()
 
         return redirect(reverse_lazy('session-detail', args=(session.id, )))

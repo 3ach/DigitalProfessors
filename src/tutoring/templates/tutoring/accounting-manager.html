@@ -19,43 +19,45 @@
 </div>
 
 <div class="row pt-3 mb-sm-3 text-center">
-    <div class="col-6 col-sm-2 mb-3 mb-sm-0">
+    <div class="col-12 col-sm-4 mb-3 mb-sm-0">
         <h1 class="text-warning">${{ billed }}</h1>
-        <h5 class="text-warning">Billed</h5>
+        <h5 class="text-warning">Billed to Clients</h5>
     </div>
-    <div class="col-6 col-sm-2 mb-3 mb-sm-0">
+    <div class="col-12 col-sm-4 mb-3 mb-sm-0">
         <h1 class="text-info">${{ received }}</h1>
-        <h5 class="text-info">Received</h5>
+        <h5 class="text-info">Received from Clients</h5>
     </div>
-    <div class="col-6 col-sm-2 mb-3 mb-sm-0">
+    <div class="col-12 col-sm-4 mb-3 mb-sm-0">
         <h1 class="text-danger">${{ due }}</h1>
-        <h5 class="text-danger">Due</h5>
+        <h5 class="text-danger">Due from Clients</h5>
     </div>
-    <div class="col-6 col-sm-2 mb-3 mb-sm-0">
-        <h1 class="text-primary">${{ gross_credit }}</h1>
-        <h5 class="text-primary">Gross Credit Card</h5>
+</div>
+<div class="row text-center mb-4">
+    <div class="col-12 col-sm-4 mb-3 mb-sm-0">
+        <h1 class="text-warning">${{ owed }}</h1>
+        <h5 class="text-warning">Earned by Professors</h5>
     </div>
-    <div class="col-6 col-sm-2 mb-3 mb-sm-0">
-        <h1 class="text-primary">${{ gross_cash }}</h1>
-        <h5 class="text-primary">Gross Cash</h5>
+    <div class="col-12 col-sm-4 mb-3 mb-sm-0">
+        <h1 class="text-info">${{ paid }}</h1>
+        <h5 class="text-info">Paid to Professors</h5>
     </div>
-    <div class="col-6 col-sm-2 mb-3 mb-sm-0">
-        <h1 class="text-primary">${{ gross_check }}</h1>
-        <h5 class="text-primary">Gross Check</h5>
+    <div class="col-12 col-sm-4 mb-3 mb-sm-0">
+        <h1 class="text-danger">${{ earnings_due }}</h1>
+        <h5 class="text-danger">Owed to Professors</h5>
     </div>
 </div>
 <div class="row text-center">
     <div class="col-6 col-sm-3 mb-3 mb-sm-0">
-        <h1 class="text-warning">${{ owed }}</h1>
-        <h5 class="text-warning">Owed</h5>
+        <h1 class="text-primary">${{ gross_credit }}</h1>
+        <h5 class="text-primary">Gross Credit Card</h5>
     </div>
     <div class="col-6 col-sm-3 mb-3 mb-sm-0">
-        <h1 class="text-info">${{ paid }}</h1>
-        <h5 class="text-info">Paid</h5>
+        <h1 class="text-primary">${{ gross_cash }}</h1>
+        <h5 class="text-primary">Gross Cash</h5>
     </div>
     <div class="col-6 col-sm-3 mb-3 mb-sm-0">
-        <h1 class="text-danger">${{ earnings_due }}</h1>
-        <h5 class="text-danger">To Pay</h5>
+        <h1 class="text-primary">${{ gross_check }}</h1>
+        <h5 class="text-primary">Gross Check</h5>
     </div>
     <div class="col-6 col-sm-3 mb-3 mb-sm-0">
         <h1 class="text-success">${{ net }}</h1>

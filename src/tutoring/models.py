@@ -44,7 +44,7 @@ class Session(models.Model):
         hours = round(hours * 2) / 2
         self.earnings = Decimal(hours) * self.professor.wage
 
-        if self.earnings < 15:
+        if self.earnings < 15 and not self.cancelled:
             self.earnings = 15
 
         return super(Session, self).save(*args, **kwargs)
