@@ -157,6 +157,19 @@ class ProfessorSessionsView(TemplateView):
         return context
 
 @method_decorator(login_required, name='dispatch')
+class ClientSessionsView(TemplateView):
+    template_name = 'tutoring/client-sessions.html'
+
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        context = super(ClientSessionsView, self).get_context_data(**kwargs)
+        client = Client.objects.get(id=kwargs['client_id'])
+        context["client"] = client
+        context["sessions"] = Session.objects.filter(client=client).order_by('-date')
+
+        return context
+
+@method_decorator(login_required, name='dispatch')
 class ClientsView(TemplateView):
     template_name = "tutoring/clients.html"
 

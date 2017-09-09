@@ -33,7 +33,7 @@
                 {% for client in clients %}
                 
                 <tr>
-                    <td>{{ client.user.first_name }} {{ client.user.last_name }}</td>
+                    <td><a href="{% url 'client-sessions' client_id=client.id %}">{{ client.user.first_name }} {{ client.user.last_name }}</a></td>
                     <td>{{ client.address }}</td>
                     <td><a href="{% url 'edit-client' pk=client.user.id %}" class="btn btn-block btn-outline-warning"><span class="fa fa-pencil-square-o"></span></a></td>
                     <td><a href="{% url 'delete-user' pk=client.user.id %}" class="btn btn-block btn-outline-danger"><span class="fa fa-trash"></span></a></td>
