@@ -18,6 +18,7 @@ from csv import DictReader
 from decimal import Decimal
 import io
 import json
+import re
 
 @method_decorator(login_required, name='dispatch')
 class AccountingView(RedirectView):
@@ -293,7 +294,7 @@ class CSVUploadView(TemplateView):
     def post(self, request):
         post = request.POST
         csvfile = request.FILES['csvFile'].file
-        csvfile = csvfile.read().decode('utf8', 'ignore')
+        csvfile = csvfile.read().decode('utf16', 'ignore')
         headers = json.loads(request.POST['headers'])
 
         reader = DictReader(io.StringIO(csvfile), headers);
@@ -318,8 +319,10 @@ class CSVUploadView(TemplateView):
             user.set_password(row[headers[int(post['phone'])]])
             user.save()
 
+            non_decimal = re.compile(r'[^\d.]+')
+
             client.address = row[headers[int(post['address'])]]
-            client.phone = row[headers[int(post['phone'])]]
+            client.phone = row[headers[int(non_decimal.sub('', post['phone']))]]
             client.website = row[headers[int(post['website'])]]
             client.wifi_ssid = row[headers[int(post['ssid'])]]
             client.wifi_password = row[headers[int(post['password'])]]
