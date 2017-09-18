@@ -16,6 +16,21 @@
 
 <br>
 
+{% if user.usertype == 'manager' or user.usertype == 'professor' %}
+
+<div class="row">
+    <div class="col-12 col-sm-2 offset-sm-10">
+        <form class="form" action="#" method="GET">
+            {% for field in status_form %}
+                {{ field.errors }}
+                {{ field }}
+            {% endfor %}
+        </form>
+    </div>
+</div>
+
+{% endif %}
+
 {% for session in sessions %}
 
 <div class="row">

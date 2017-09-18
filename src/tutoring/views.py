@@ -198,7 +198,14 @@ class ProfessorDashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         context = super(ProfessorDashboardView, self).get_context_data(**kwargs)
-        context["sessions"] = Session.objects.filter(professor__user=user).order_by('-date')
+
+        status = "OPEN"
+        if "status" in self.request.GET:
+            status = self.request.GET["status"]
+
+        context["sessions"] = Session.objects.filter(professor__user=user, status=status).order_by('-date')
+        context["status_form"] = StatusForm()
+        context['status_form'].fields['status'].initial = status
 
         return context
 
@@ -219,7 +226,14 @@ class ManagerDashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ManagerDashboardView, self).get_context_data(**kwargs)
-        context["sessions"] = Session.objects.all().order_by('-date')
+
+        status = "OPEN"
+        if "status" in self.request.GET:
+            status = self.request.GET["status"]
+        
+        context["sessions"] = Session.objects.filter(status=status).order_by('-date')
+        context["status_form"] = StatusForm()
+        context['status_form'].fields['status'].initial = status
 
         return context
 
