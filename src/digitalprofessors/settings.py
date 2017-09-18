@@ -134,6 +134,14 @@ CHARGE_METHODS = (
     ('CASH', 'Cash', ),
 )
 
+STATUSES = (
+    ('OPEN', 'Open'),
+    ('PEND', 'Pending'),
+    ('WAIT', 'Waiting for Parts'),
+    ('CLOS', 'Closed'),
+    ('OTHR', 'Other'),
+)
+
 try:
     from .local_settings import *
 except ImportError:

@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import FormView, RedirectView, TemplateView, UpdateView, DeleteView, CreateView, View
 from tutoring.models import Professor, Client, Session
-from tutoring.forms import SessionForm, ContactForm
+from tutoring.forms import SessionForm, ContactForm, StatusForm
 from users.models import User
 from csv import DictReader
 from decimal import Decimal
@@ -142,6 +142,7 @@ class ClientAccountingView(TemplateView):
 @method_decorator(login_required, name='dispatch')
 class UserAccountingView(TemplateView):
     pass
+    
 
 @method_decorator(login_required, name='dispatch')
 class ProfessorSessionsView(TemplateView):
@@ -232,7 +233,9 @@ class SessionView(TemplateView):
 
         context = super(SessionView, self).get_context_data(**kwargs)
         context['form'] = ContactForm()
+        context['status_form'] = StatusForm()
         context['session'] = session
+        context['status_form'].fields['status'].initial = session.status
         
         return context
 
@@ -363,6 +366,16 @@ class CancelSessionView(View):
         session.billed = 0
         session.earnings = 0
 
+        session.save()
+
+        return redirect(reverse_lazy('session-detail', args=(session.id, )))
+
+class UpdateStatusView(View):
+    def post(self, request, session_id):
+        status = request.POST['status']
+        session = Session.objects.get(id=session_id)
+        
+        session.status = status
         session.save()
 
         return redirect(reverse_lazy('session-detail', args=(session.id, )))

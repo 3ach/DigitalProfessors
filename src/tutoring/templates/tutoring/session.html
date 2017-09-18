@@ -25,6 +25,26 @@
     </div>
     {% endif %}
 
+    {% if user.usertype == 'manager' or user.usertype == 'professor' %}
+        <div class="row mb-3">
+            <div class="col-12">
+                <form class="form" action="updateSession" method="POST">
+                    {% csrf_token %}
+                    {% for field in status_form %}
+                        {{ field.errors }}
+                        {{ field }}
+                    {% endfor %}
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div class="row mb-3">
+            <div class="col-12">
+                <span class="h4">{{ session.get_status_display }}</span>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="row">
         <div class="col-12 col-sm-6 mb-3">
             <div class="card card-inverse" style="background: #333">

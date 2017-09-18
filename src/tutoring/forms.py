@@ -5,6 +5,11 @@ from tutoring.models import Session, Client, Professor, SessionCategory
 class ContactForm(forms.Form):
     message = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Have a question?', 'rows': 2}))
 
+class StatusForm(forms.Form):
+    status = forms.ChoiceField(choices = settings.STATUSES, widget=forms.Select(
+        attrs={'class': 'form-control', 'onchange': 'this.form.submit()'}
+    ))
+
 class SessionForm(forms.ModelForm):
     client = forms.ModelChoiceField(queryset=Client.objects.all(), empty_label="Select Client", widget=forms.Select(
         attrs={'class': 'form-control'}
@@ -15,6 +20,10 @@ class SessionForm(forms.ModelForm):
     ))
 
     category = forms.ModelChoiceField(queryset=SessionCategory.objects.all(), empty_label="Select Category", widget=forms.Select(
+        attrs={'class': 'form-control'}
+    ))
+
+    status = forms.ChoiceField(choices=settings.STATUSES, widget=forms.Select(
         attrs={'class': 'form-control'}
     ))
 

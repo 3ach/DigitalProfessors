@@ -22,6 +22,7 @@ class Session(models.Model):
     end_time = models.TimeField()
     distance = models.FloatField()
     payment_method = models.CharField(max_length=4, choices=settings.CHARGE_METHODS)
+    status = models.CharField(max_length=4, choices=settings.STATUSES)
     hourly = models.DecimalField(max_digits=12, decimal_places=2)
     billed = models.DecimalField(max_digits=12, decimal_places=2)
     paid = models.DecimalField(max_digits=12, decimal_places=2, default=0)
