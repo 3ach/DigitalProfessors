@@ -12,7 +12,7 @@ services:
         image: zachzundel/digital-professors:1.0.0-alpha
         depends_on:
             - db
-        command: ["gunicorn", "--access-logfile", "-", "--bind", "0.0.0.0:8000", "digitalprofessors.wsgi:application"] 
+        command: bash -c "python manage.py migrate && gunicorn --access-logfile - --bind 0.0.0.0:8000 digitalprofessors.wsgi:application"
         volumes:
             - type: volume
               source: static
