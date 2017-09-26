@@ -1,6 +1,7 @@
 from django.contrib.auth import REDIRECT_FIELD_NAME, login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.db import IntegrityError
 from django.db.models import Sum, F
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -308,12 +309,14 @@ class CSVUploadView(TemplateView):
     def post(self, request):
         post = request.POST
         csvfile = request.FILES['csvFile'].file
-        csvfile = csvfile.read().decode('utf16', 'ignore')
+        csvfile = csvfile.read().decode('utf8', 'ignore')
         headers = json.loads(request.POST['headers'])
 
         reader = DictReader(io.StringIO(csvfile), headers);
 
         for index, row in enumerate(reader):
+            row["!!EMPTY!!"] = ""
+
             if index == 0:
                 continue
 
@@ -329,19 +332,30 @@ class CSVUploadView(TemplateView):
             else: 
                 user.username = row[headers[int(post['username'])]]
             
-            user.save()
-            user.set_password(row[headers[int(post['phone'])]])
-            user.save()
+            try:
+                user.save()
+            except IntegrityError:
+                continue
 
             non_decimal = re.compile(r'[^\d.]+')
 
+            phone_number = non_decimal.sub('', row[headers[int(post['phone'])]])
+            phone_number = "".join(phone_number.split('.'))
+
+            if phone_number == '':
+                phone_number = 0000000000
+            else:
+                phone_number = int(phone_number)
+
             client.address = row[headers[int(post['address'])]]
-            client.phone = row[headers[int(non_decimal.sub('', post['phone']))]]
+            client.phone = phone_number
             client.website = row[headers[int(post['website'])]]
             client.wifi_ssid = row[headers[int(post['ssid'])]]
             client.wifi_password = row[headers[int(post['password'])]]
             client.user = user
 
+            user.set_password(client.phone)
+            user.save()
             client.save()
 
         return redirect(reverse_lazy('clients'))

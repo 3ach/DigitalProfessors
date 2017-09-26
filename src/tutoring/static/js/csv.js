@@ -2,9 +2,10 @@ function setHeaders(result, file) {
     let headers = result.meta.fields;
     
     headers.forEach((header, index) => {
-        console.log(header);
-        $('select').append($('<option>', {value: index, text: header}));
+        $('select').append($('<option>', {value: index + 1, text: header}));
     })
+
+    headers = ['!!EMPTY!!'].concat(headers);
 
     $('select').prop('disabled', false);
     $('#submit').prop('disabled', false);

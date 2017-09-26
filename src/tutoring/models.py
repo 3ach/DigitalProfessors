@@ -53,7 +53,7 @@ class Session(models.Model):
 class Client(models.Model):
     user = models.ForeignKey('users.User')
     address = models.TextField(blank=True, null=True)
-    phone = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    phone = models.DecimalField(max_digits=11, decimal_places=0, blank=True, null=True)
     website = models.URLField(blank=True, null=True)
     wifi_ssid = models.TextField(max_length=128, blank=True, null=True)
     wifi_password = models.TextField(max_length=128, blank=True, null=True)
