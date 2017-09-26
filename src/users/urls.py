@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^professors/new', views.AddProfessorView.as_view(), name="add-professor"),
     url(r'^professors/(?P<pk>[0-9]+)', views.UpdateProfessorView.as_view(), name="edit-professor"),
     url(r'^users/(?P<pk>[0-9]+)/delete', views.DeleteUserView.as_view(), name="delete-user"),
-    url(r'^users/(?P<pk>[0-9]+)', views.UserFormView.as_view(), name="edit-user")
+    url(r'^users/(?P<pk>[0-9]+)', views.UserFormView.as_view(), name="edit-user"),
+    url(r'^setup', views.SetupView.as_view(), name="setup-manager")
 ]

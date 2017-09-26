@@ -9,7 +9,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import FormView, RedirectView, TemplateView, UpdateView, DeleteView, CreateView
 from django.shortcuts import render, redirect
 from tutoring.models import Professor, Client, Session
-from users.forms import LoginForm, UserForm, ClientForm, ProfessorForm
+from users.forms import LoginForm, UserForm, ClientForm, ProfessorForm, ManagerForm
 from users.models import User
 
 @method_decorator(login_required, name='dispatch')
@@ -47,6 +47,12 @@ class AddProfessorView(CreateView):
     form_class = ProfessorForm
     success_url = reverse_lazy('professors')
 
+class SetupView(CreateView):
+    model = User
+    template_name = 'users/user-form.html'
+    form_class = ManagerForm
+    success_url = 'login'
+
 @method_decorator(login_required, name='dispatch')
 class DeleteUserView(DeleteView):
     model = User
@@ -65,6 +71,8 @@ class LoginView(FormView):
     @method_decorator(csrf_protect)
     @method_decorator(never_cache)
     def dispatch(self, request, *args, **kwargs):
+        if User.objects.count() == 0:
+            return redirect(reverse_lazy('setup-manager'))
         # Sets a test cookie to make sure the user has cookies enabled
         request.session.set_test_cookie()
 
@@ -78,7 +86,7 @@ class LoginView(FormView):
 
         if user is None or not user.is_authenticated:
             return redirect('/users/login/?next=/')
-        
+
         login(self.request, user)
 
         # If the test cookie worked, go ahead and

@@ -28,6 +28,21 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ('first_name', 'last_name', 'username', 'email')
 
+class ManagerForm(UserForm):
+    password = forms.CharField(max_length=128, widget=forms.PasswordInput(
+        attrs={'class': 'form-control', 'placeholder': 'Password'}
+    ))
+
+    def save(self, commit=True):
+        user = super(ManagerForm, self).save(commit)
+
+        user.set_password(self.cleaned_data['password'])
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+
+        return user
+
 
 class ClientForm(UserForm):
     address = forms.CharField(widget=forms.Textarea(
@@ -48,7 +63,7 @@ class ClientForm(UserForm):
 
     def __init__(self, *args, **kwargs):
         super(ClientForm, self).__init__(*args, **kwargs)
-        
+
         if kwargs['instance']:
             client = Client.objects.get(user=kwargs['instance'])
 
@@ -57,7 +72,7 @@ class ClientForm(UserForm):
             self.initial['website'] = client.website
             self.initial['wifi_ssid'] = client.wifi_ssid
             self.initial['wifi_password'] = client.wifi_password
-        
+
     def save(self, commit=True):
         user = super(ClientForm, self).save(commit)
 
@@ -66,7 +81,7 @@ class ClientForm(UserForm):
 
             if self.cleaned_data['address']:
                 client.address = self.cleaned_data['address']
-            
+
             if self.cleaned_data['phone']:
                 client.phone = self.cleaned_data['phone']
                 user.set_password(self.cleaned_data['phone'])
@@ -82,7 +97,7 @@ class ClientForm(UserForm):
                 client.wifi_password = self.cleaned_data['wifi_password']
 
             client.save()
-            
+
 
         return user
 
@@ -90,7 +105,7 @@ class ClientForm(UserForm):
 class ProfessorForm(UserForm):
     wage = forms.DecimalField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Wage'}))
-    
+
     password = forms.CharField(widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': 'Password'}
     ))
