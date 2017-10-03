@@ -65,22 +65,27 @@ class ManagerAccountingView(TemplateView):
                 professor['professor'] = Professor.objects.get(id=professor['professor'])
                 professor['total_owed'] = professor['earnings__sum'] - professor['earnings_paid__sum']
 
-            context['billed'] = aggregates['billed__sum']
-            context['received'] = aggregates['paid__sum']
+            context['billed'] = aggregates['billed__sum'] if aggregates["billed__sum"] is not None else 0
+            context['received'] = aggregates['paid__sum'] if aggregates["paid__sum"] is not None else 0
             context['due'] = context['billed'] - context['received']
-            context['gross_check'] = check_gross['billed__sum'] if check_gross['billed__sum'] is not None else "0.00"
-            context['gross_cash'] = cash_gross['billed__sum'] if cash_gross['billed__sum'] is not None else "0.00"
-            context['gross_credit'] = credit_gross['billed__sum'] if credit_gross['billed__sum'] is not None else "0.00"
-            context['owed'] = aggregates['earnings__sum']
-            context['paid'] = aggregates['earnings_paid__sum']
+            context['gross_check'] = check_gross['billed__sum'] if check_gross['billed__sum'] is not None else 0
+            context['gross_cash'] = cash_gross['billed__sum'] if cash_gross['billed__sum'] is not None else 0
+            context['gross_credit'] = credit_gross['billed__sum'] if credit_gross['billed__sum'] is not None else 0
+            context['owed'] = aggregates['earnings__sum'] if aggregates["earnings__sum"] is not None else 0
+            context['paid'] = aggregates['earnings_paid__sum'] if aggregates["earnings_paid__sum"] is not None else 0
             context['earnings_due'] = context['owed'] - context['paid']
             context['net'] = context['billed'] - context['owed']
             context['unpaid'] = unpaid
             context['professorsOwed'] = owed
             
-            return context
         except TypeError:
-            return context
+            pass
+        
+        for item in context:
+            if context[item] == 0:
+                context[item] = "0.00"
+
+        return context
 
 @method_decorator(login_required, name='dispatch')
 class ProfessorAccountingView(TemplateView):
@@ -103,14 +108,19 @@ class ProfessorAccountingView(TemplateView):
         unpaid = base.filter(professor__user=user).exclude(billed=F('paid'))
 
         try:
-            context['billed'] = aggregates['earnings__sum']
-            context['received'] = aggregates['earnings_paid__sum']
+            context['billed'] = aggregates['earnings__sum'] if aggregates["earnings__sum"] is not None else 0
+            context['received'] = aggregates['earnings_paid__sum'] if aggregates["earnings_paid__sum"] is not None else 0
             context['due'] = context['billed'] - context['received']
             context['unpaid'] = unpaid
             
-            return context
         except TypeError:
-            return context
+            pass
+        
+        for item in context:
+            if context[item] is 0:
+                context[item] = "0.00"
+
+        return context
 
 @method_decorator(login_required, name='dispatch')
 class ClientAccountingView(TemplateView):
@@ -132,14 +142,19 @@ class ClientAccountingView(TemplateView):
         unpaid = base.filter(client__user=user).exclude(billed=F('paid'))
 
         try:
-            context['billed'] = aggregates['billed__sum']
-            context['received'] = aggregates['paid__sum']
+            context['billed'] = aggregates['billed__sum'] if aggregates["billed__sum"] is not None else 0
+            context['received'] = aggregates['paid__sum'] if aggregates["paid__sum"] is not None else 0
             context['due'] = context['billed'] - context['received']
             context['unpaid'] = unpaid
-            
-            return context
+
         except TypeError:
-            return context
+            pass
+        
+        for item in context:
+            if context[item] is 0:
+                context[item] = "0.00"
+
+        return context
 
 @method_decorator(login_required, name='dispatch')
 class UserAccountingView(TemplateView):

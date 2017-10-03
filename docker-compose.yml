@@ -12,10 +12,10 @@ services:
         image: zachzundel/digital-professors:1.0.0-alpha
         depends_on:
             - db
-        command: bash -c "python manage.py migrate && gunicorn --access-logfile - --bind 0.0.0.0:8000 digitalprofessors.wsgi:application"
+        command: bash -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn --access-logfile - --bind 0.0.0.0:8000 digitalprofessors.wsgi:application"
         volumes:
             - type: volume
-              source: static
+              source: ./static
               target: /var/www/static
 
     serve:
@@ -26,7 +26,7 @@ services:
             - app
         volumes:
             - type: volume
-              source: static
+              source: ./static
               target: /var/www/static
             - ./nginx:/etc/nginx/conf.d
 

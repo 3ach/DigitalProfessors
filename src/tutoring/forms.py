@@ -28,7 +28,7 @@ class SessionForm(forms.ModelForm):
     ))
 
     date = forms.DateField(widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Start Time', 'type': 'date'}))
+        attrs={'class': 'form-control', 'placeholder': 'Date', 'type': 'date'}))
 
     start_time = forms.TimeField(widget=forms.TimeInput(
         attrs={'class': 'form-control', 'placeholder': 'Start Time', 'type': 'time'}, format="%I:%M %p"))

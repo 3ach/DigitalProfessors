@@ -7,13 +7,10 @@ RUN apt-get update && \
 
 WORKDIR /usr/src/digitalprofessors
 
-COPY requirements.txt ./
+COPY ./requirements.txt ./
 
 RUN pip install -r requirements.txt
-COPY src ./
-COPY local_settings.py digitalprofessors/
-
-RUN rm requirements.txt
-RUN ls
+COPY ./src ./
+COPY ./src/digitalprofessors/local_settings.py digitalprofessors/
 
 EXPOSE 8000
