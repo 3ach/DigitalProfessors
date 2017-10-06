@@ -168,9 +168,17 @@ class ProfessorSessionsView(TemplateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         context = super(ProfessorSessionsView, self).get_context_data(**kwargs)
+
+        status = "OPEN"
+        if "status" in self.request.GET:
+            status = self.request.GET["status"]
+
         professor = Professor.objects.get(id=kwargs['professor_id'])
         context["professor"] = professor
-        context["sessions"] = Session.objects.filter(professor=professor).order_by('-date')
+        context["sessions"] = Session.objects.filter(professor=professor, status=status).order_by('-date')
+
+        context["status_form"] = StatusForm()
+        context['status_form'].fields['status'].initial = status
 
         return context
 
@@ -181,9 +189,17 @@ class ClientSessionsView(TemplateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         context = super(ClientSessionsView, self).get_context_data(**kwargs)
+
+        status = "OPEN"
+        if "status" in self.request.GET:
+            status = self.request.GET["status"]
+    
         client = Client.objects.get(id=kwargs['client_id'])
         context["client"] = client
-        context["sessions"] = Session.objects.filter(client=client).order_by('-date')
+        context["sessions"] = Session.objects.filter(client=client, status=status).order_by('-date')
+        context["status_form"] = StatusForm()
+        context['status_form'].fields['status'].initial = status
+
 
         return context
 
@@ -232,7 +248,15 @@ class ClientDashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         context = super(ClientDashboardView, self).get_context_data(**kwargs)
+
+        status = "OPEN"
+        if "status" in self.request.GET:
+            status = self.request.GET["status"]
+
         context["sessions"] = Session.objects.filter(client__user=user).order_by('-date')
+        
+        context["status_form"] = StatusForm()
+        context['status_form'].fields['status'].initial = status
 
         return context
 

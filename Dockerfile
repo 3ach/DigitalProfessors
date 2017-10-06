@@ -11,6 +11,6 @@ COPY ./requirements.txt ./
 
 RUN pip install -r requirements.txt
 COPY ./src ./
-COPY ./src/digitalprofessors/local_settings.py digitalprofessors/
+COPY ./local_settings.py digitalprofessors/
 
 EXPOSE 8000
