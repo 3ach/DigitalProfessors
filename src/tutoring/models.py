@@ -98,6 +98,15 @@ class Professor(models.Model):
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name
 
+    @property
+    def miles_driven(self):
+        total_miles = 0
+
+        for session in Session.objects.filter(professor=self):
+            total_miles += session.distance
+
+        return total_miles
+
     def delete(self, *args, **kwargs):
         self.disabled = True
         self.save()

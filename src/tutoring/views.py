@@ -55,6 +55,7 @@ class ManagerAccountingView(TemplateView):
         cash_gross = base.filter(payment_method="CASH").aggregate(Sum('billed'))
         credit_gross = base.filter(payment_method="CRDT").aggregate(Sum('billed'))
         check_gross = base.filter(payment_method="CHCK").aggregate(Sum('billed'))
+        miles_total = base.filter(cancelled=False).aggregate(Sum('distance'))
 
         try:
             for client in unpaid: 
@@ -64,6 +65,8 @@ class ManagerAccountingView(TemplateView):
             for professor in owed:
                 professor['professor'] = Professor.objects.get(id=professor['professor'])
                 professor['total_owed'] = professor['earnings__sum'] - professor['earnings_paid__sum']
+
+            print(miles_total)
 
             context['billed'] = aggregates['billed__sum'] if aggregates["billed__sum"] is not None else 0
             context['received'] = aggregates['paid__sum'] if aggregates["paid__sum"] is not None else 0
@@ -77,6 +80,7 @@ class ManagerAccountingView(TemplateView):
             context['net'] = context['billed'] - context['owed']
             context['unpaid'] = unpaid
             context['professorsOwed'] = owed
+            context['miles_total'] = miles_total['distance__sum'] if miles_total['distance__sum'] is not None else 0
             
         except TypeError:
             pass
