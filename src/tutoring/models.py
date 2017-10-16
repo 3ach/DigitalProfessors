@@ -45,8 +45,8 @@ class Session(models.Model):
         hours = round(hours * 2) / 2
         self.earnings = Decimal(hours) * self.professor.wage
 
-        if self.earnings < 15 and not self.cancelled:
-            self.earnings = 15
+        if self.earnings < self.professor.minimum and not self.cancelled:
+            self.earnings = self.professor.minimum
 
         return super(Session, self).save(*args, **kwargs)
 
@@ -92,6 +92,7 @@ class Client(models.Model):
 class Professor(models.Model):
     wage = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     user = models.ForeignKey("users.User")
+    minimum = models.DecimalField(max_digits=12, decimal_places=2, default=15)
 
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name
