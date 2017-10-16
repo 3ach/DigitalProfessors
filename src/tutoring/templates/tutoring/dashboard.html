@@ -45,7 +45,7 @@
             <div class="card-block">
                 <div class="row">
                     <div class="col-12 col-sm-10">
-                        <h4 class="card-title">{{ session.client.user.first_name }} {{ session.client.user.last_name }} <span class="text-muted" id="session-id">#{{ session.id }}</span></h4>
+                        <h4 class="card-title">{{ session.client.user.first_name }} {{ session.client.user.last_name }} <span class="text-muted" id="session-id">#{{ session.id }} ({{ session.get_status_display }})</span></h4>
                         <p class="card-text" style="margin-bottom: 3px"><small>{{ session.client.address|linebreaksbr }}</small></p>
                         <p class="card-text"><small>{{ session.date }}</small></p>
                         {% if session.cancelled %}

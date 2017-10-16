@@ -6,8 +6,8 @@ class ContactForm(forms.Form):
     message = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Have a question?', 'rows': 2}))
 
 class StatusForm(forms.Form):
-    status = forms.ChoiceField(choices = settings.STATUSES, widget=forms.Select(
-        attrs={'class': 'form-control', 'onchange': 'this.form.submit()'}
+    status = forms.ChoiceField(choices = (('', 'Status'), ) + settings.STATUSES, widget=forms.Select(
+        attrs={'class': 'form-control', 'id': 'status-select'}
     ))
 
 class SessionForm(forms.ModelForm):
