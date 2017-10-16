@@ -15,7 +15,7 @@ class SessionForm(forms.ModelForm):
         attrs={'class': 'form-control'}
     ))
 
-    professor = forms.ModelChoiceField(queryset=Professor.objects.all(), empty_label="Select Professor", widget=forms.Select(
+    professor = forms.ModelChoiceField(queryset=Professor.objects.filter(disabled=False), empty_label="Select Professor", widget=forms.Select(
         attrs={'class': 'form-control'}
     ))
 

@@ -219,7 +219,7 @@ class ProfessorsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfessorsView, self).get_context_data(**kwargs)
-        context["professors"] = Professor.objects.all().order_by('user__last_name')
+        context["professors"] = Professor.objects.filter(disabled=False).order_by('user__last_name')
 
         return context
 
@@ -231,11 +231,15 @@ class ProfessorDashboardView(TemplateView):
         user = self.request.user
         context = super(ProfessorDashboardView, self).get_context_data(**kwargs)
 
-        status = "OPEN"
+        status = ""
         if "status" in self.request.GET:
             status = self.request.GET["status"]
 
-        context["sessions"] = Session.objects.filter(professor__user=user, status=status).order_by('-date')
+        if status == "":
+            context["sessions"] = Session.objects.filter(professor__user=user).order_by('-date')
+        else:
+            context["sessions"] = Session.objects.filter(professor__user=user, status=status).order_by('-date')
+
         context["status_form"] = StatusForm()
         context['status_form'].fields['status'].initial = status
 
@@ -322,7 +326,6 @@ class CreateSessionView(CreateView):
 
         if 'client' in self.request.GET:
             initial["client"] = self.request.GET["client"]
-
 
         if 'professor' in self.request.GET:
             initial["professor"] = self.request.GET["professor"]
@@ -449,3 +452,4 @@ class UpdateStatusView(View):
         session.save()
 
         return redirect(reverse_lazy('session-detail', args=(session.id, )))
+

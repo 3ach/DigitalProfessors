@@ -93,6 +93,11 @@ class Professor(models.Model):
     wage = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     user = models.ForeignKey("users.User")
     minimum = models.DecimalField(max_digits=12, decimal_places=2, default=15)
+    disabled = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name
+
+    def delete(self, *args, **kwargs):
+        self.disabled = True
+        self.save()

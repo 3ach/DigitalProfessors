@@ -128,7 +128,12 @@
                 <div class="card-block">
                     <div class="row">
                         <div class="col-12"> 
-                            <h5>{{ session.professor.user.first_name }} {{ session.professor.user.last_name }}</h5>
+                            <h5>{{ session.professor.user.first_name }} {{ session.professor.user.last_name }}
+
+                            {% if session.professor.disabled %}
+                            <span class="badge badge-danger"> Disabled </span>
+                            {% endif %}
+                        </h5>
                             {% if user.usertype == 'manager' or user.usertype == 'professor' %}
                             
                             <h6>{{ session.distance }} miles traveled</h6>

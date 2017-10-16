@@ -6,7 +6,7 @@ from django.utils.http import is_safe_url
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from django.views.generic import FormView, RedirectView, TemplateView, UpdateView, DeleteView, CreateView
+from django.views.generic import FormView, RedirectView, TemplateView, UpdateView, DeleteView, CreateView, View
 from django.shortcuts import render, redirect
 from tutoring.models import Professor, Client, Session
 from users.forms import LoginForm, UserForm, ClientForm, ProfessorForm, ManagerForm
@@ -106,6 +106,15 @@ class LoginView(FormView):
             redirect_to = self.success_url
 
         return redirect_to
+
+@method_decorator(login_required, name='dispatch')
+class DeactivateProfessorView(View):
+    def get(self, request, professor_id):
+        professor = Professor.objects.get(id=professor_id)
+        professor.disabled = True
+        professor.save()
+
+        return redirect(reverse_lazy('professors'))
 
 @method_decorator(login_required, name='dispatch')
 class LogoutView(RedirectView):
