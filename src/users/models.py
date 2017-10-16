@@ -1,10 +1,14 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import SuspiciousOperation
+from django.db import models
 from django.urls import reverse_lazy
 from tutoring.models import Professor, Client
 
 
 class User(AbstractUser): 
+    first_name = models.CharField(max_length=254)
+    last_name = models.CharField(max_length=254)
+
     def _userlevel(self, result):
         if self.is_staff:
             return result['manager']
