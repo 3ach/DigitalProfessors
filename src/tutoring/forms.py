@@ -52,7 +52,12 @@ class SessionForm(forms.ModelForm):
         attrs={'class': 'form-control'}), choices=settings.CHARGE_METHODS)
 
     class Media:
-        js = ('js/session.js', )
+        js = ('js/session.js', 
+              'js/bootstrap-clockpicker.min.js', )
+
+        css = {
+            'all': ('css/bootstrap-clockpicker.min.css', )
+        }
 
     class Meta:
         model = Session

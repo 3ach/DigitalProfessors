@@ -106,9 +106,12 @@ class ProfessorForm(UserForm):
     wage = forms.DecimalField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Wage'}))
 
+    minimum = forms.DecimalField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Minimum Session Earnings'}))
+
     password = forms.CharField(widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': 'Password'}
-    ))
+    ), required=False)
 
     def __init__(self, *args, **kwargs):
         super(ProfessorForm, self).__init__(*args, **kwargs)
@@ -117,6 +120,7 @@ class ProfessorForm(UserForm):
             professor = Professor.objects.get(user=kwargs['instance'])
 
             self.initial['wage'] = professor.wage
+            self.initial['minimum'] = professor.minimum
 
     def save(self, commit=True):
         user = super(ProfessorForm, self).save(commit)
@@ -130,6 +134,9 @@ class ProfessorForm(UserForm):
 
             if self.cleaned_data['wage']:
                 professor.wage = self.cleaned_data['wage']
+
+            if self.cleaned_data['minimum']:
+                professor.minimum = self.cleaned_data["minimum"]
 
             professor.save()
 
