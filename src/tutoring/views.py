@@ -235,14 +235,7 @@ class ProfessorDashboardView(TemplateView):
         user = self.request.user
         context = super(ProfessorDashboardView, self).get_context_data(**kwargs)
 
-        status = ""
-        if "status" in self.request.GET:
-            status = self.request.GET["status"]
-
-        if status == "":
-            context["sessions"] = Session.objects.filter(professor__user=user).order_by('-date')
-        else:
-            context["sessions"] = Session.objects.filter(professor__user=user, status=status).order_by('-date')
+        context["sessions"] = Session.objects.filter(professor__user=user).order_by('-date')
 
         context["status_form"] = StatusForm()
         context['status_form'].fields['status'].initial = status
@@ -256,11 +249,6 @@ class ClientDashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         context = super(ClientDashboardView, self).get_context_data(**kwargs)
-
-        status = "OPEN"
-        if "status" in self.request.GET:
-            status = self.request.GET["status"]
-
         context["sessions"] = Session.objects.filter(client__user=user).order_by('-date')
         
         context["status_form"] = StatusForm()
@@ -275,11 +263,8 @@ class ManagerDashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ManagerDashboardView, self).get_context_data(**kwargs)
 
-        status = "OPEN"
-        if "status" in self.request.GET:
-            status = self.request.GET["status"]
         
-        context["sessions"] = Session.objects.filter(status=status).order_by('-date')
+        context["sessions"] = Session.objects.all().order_by('-date')
         context["status_form"] = StatusForm()
         context['status_form'].fields['status'].initial = status
 
@@ -384,6 +369,8 @@ class CSVUploadView(TemplateView):
                 continue
 
             non_decimal = re.compile(r'[^\d.]+')
+
+            phone_number = phone_number.split(" ::: ")[0]
 
             phone_number = non_decimal.sub('', row[headers[int(post['phone'])]])
             phone_number = "".join(phone_number.split('.'))
