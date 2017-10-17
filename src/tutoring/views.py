@@ -173,16 +173,11 @@ class ProfessorSessionsView(TemplateView):
         user = self.request.user
         context = super(ProfessorSessionsView, self).get_context_data(**kwargs)
 
-        status = "OPEN"
-        if "status" in self.request.GET:
-            status = self.request.GET["status"]
-
         professor = Professor.objects.get(id=kwargs['professor_id'])
         context["professor"] = professor
-        context["sessions"] = Session.objects.filter(professor=professor, status=status).order_by('-date')
+        context["sessions"] = Session.objects.filter(professor=professor).order_by('-date')
 
         context["status_form"] = StatusForm()
-        context['status_form'].fields['status'].initial = status
 
         return context
 
@@ -194,16 +189,10 @@ class ClientSessionsView(TemplateView):
         user = self.request.user
         context = super(ClientSessionsView, self).get_context_data(**kwargs)
 
-        status = "OPEN"
-        if "status" in self.request.GET:
-            status = self.request.GET["status"]
-    
         client = Client.objects.get(id=kwargs['client_id'])
         context["client"] = client
-        context["sessions"] = Session.objects.filter(client=client, status=status).order_by('-date')
+        context["sessions"] = Session.objects.filter(client=client).order_by('-date')
         context["status_form"] = StatusForm()
-        context['status_form'].fields['status'].initial = status
-
 
         return context
 
@@ -238,7 +227,6 @@ class ProfessorDashboardView(TemplateView):
         context["sessions"] = Session.objects.filter(professor__user=user).order_by('-date')
 
         context["status_form"] = StatusForm()
-        context['status_form'].fields['status'].initial = status
 
         return context
 
@@ -252,7 +240,6 @@ class ClientDashboardView(TemplateView):
         context["sessions"] = Session.objects.filter(client__user=user).order_by('-date')
         
         context["status_form"] = StatusForm()
-        context['status_form'].fields['status'].initial = status
 
         return context
 
@@ -266,8 +253,6 @@ class ManagerDashboardView(TemplateView):
         
         context["sessions"] = Session.objects.all().order_by('-date')
         context["status_form"] = StatusForm()
-        context['status_form'].fields['status'].initial = status
-
         return context
 
 @method_decorator(login_required, name='dispatch')
@@ -283,7 +268,6 @@ class SessionView(TemplateView):
         context['form'] = ContactForm()
         context['status_form'] = StatusForm()
         context['session'] = session
-        context['status_form'].fields['status'].initial = session.status
         
         return context
 
