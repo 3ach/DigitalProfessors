@@ -124,6 +124,8 @@ class ProfessorForm(UserForm):
 
     def save(self, commit=True):
         user = super(ProfessorForm, self).save(commit)
+        print(self.data)
+        print(self.cleaned_data)
 
         if self.cleaned_data['password']:
             user.set_password(self.cleaned_data['password'])
@@ -132,10 +134,10 @@ class ProfessorForm(UserForm):
         if commit:
             professor, created = Professor.objects.get_or_create(user=user)
 
-            if self.cleaned_data['wage']:
+            if 'wage' in self.cleaned_data:
                 professor.wage = self.cleaned_data['wage']
 
-            if self.cleaned_data['minimum']:
+            if 'minimum' in self.cleaned_data:
                 professor.minimum = self.cleaned_data["minimum"]
 
             professor.save()
