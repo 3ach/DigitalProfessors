@@ -327,7 +327,7 @@ class CSVUploadView(TemplateView):
         csvfile = csvfile.read().decode('utf8', 'ignore')
         headers = json.loads(request.POST['headers'])
 
-        reader = DictReader(io.StringIO(csvfile), headers);
+        reader = DictReader((x.replace('\0', '') for x in csvfile), headers);
 
         for index, row in enumerate(reader):
             row["!!EMPTY!!"] = ""
