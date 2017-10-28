@@ -66,8 +66,6 @@ class ManagerAccountingView(TemplateView):
                 professor['professor'] = Professor.objects.get(id=professor['professor'])
                 professor['total_owed'] = professor['earnings__sum'] - professor['earnings_paid__sum']
 
-            print(miles_total)
-
             context['billed'] = aggregates['billed__sum'] if aggregates["billed__sum"] is not None else 0
             context['received'] = aggregates['paid__sum'] if aggregates["paid__sum"] is not None else 0
             context['due'] = context['billed'] - context['received']
@@ -268,8 +266,6 @@ class SessionView(TemplateView):
         context['form'] = ContactForm()
         context['status_form'] = UpdateStatusForm(initial={'status': session.status})
         context['session'] = session
-
-        print(context['status_form'].__dict__)
         
         return context
 
@@ -363,9 +359,14 @@ class CSVUploadView(TemplateView):
             except IntegrityError:
                 continue
 
+            phone_number = row[headers[int(post['phone'])]]
+
+            if phone_number is None:
+                phone_number = ""
+            
             non_decimal = re.compile(r'[^\d.]+')
 
-            phone_number = row[headers[int(post['phone'])]].split(" ::: ")[0]
+            phone_number = .split(" ::: ")[0]
 
             phone_number = non_decimal.sub('', phone_number)
             phone_number = "".join(phone_number.split('.'))
