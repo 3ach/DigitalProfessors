@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import FormView, RedirectView, TemplateView, UpdateView, DeleteView, CreateView, View
 from tutoring.models import Professor, Client, Session
-from tutoring.forms import SessionForm, ContactForm, StatusForm
+from tutoring.forms import SessionForm, ContactForm, StatusForm, UpdateStatusForm
 from users.models import User
 from csv import DictReader
 from decimal import Decimal
@@ -266,8 +266,10 @@ class SessionView(TemplateView):
 
         context = super(SessionView, self).get_context_data(**kwargs)
         context['form'] = ContactForm()
-        context['status_form'] = StatusForm()
+        context['status_form'] = UpdateStatusForm(initial={'status': session.status})
         context['session'] = session
+
+        print(context['status_form'].__dict__)
         
         return context
 
@@ -342,8 +344,17 @@ class CSVUploadView(TemplateView):
             user.last_name = row[headers[int(post['lastName'])]]
             user.email = row[headers[int(post['email'])]]
 
+            if user.first_name is None:
+                user.first_name = ""
+            
+            if user.last_name is None:
+                user.last_name = ""
+
+            if user.email is None:
+                user.email = "" 
+
             if post['username'] == 'generate':
-                user.username = row[headers[int(post['firstName'])]].lower() + row[headers[int(post['lastName'])]].lower()
+                user.username = user.first_name.lower() + user.last_name.lower()
             else: 
                 user.username = row[headers[int(post['username'])]]
             

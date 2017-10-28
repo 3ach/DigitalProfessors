@@ -10,6 +10,11 @@ class StatusForm(forms.Form):
         attrs={'class': 'form-control', 'id': 'status-select'}
     ))
 
+class UpdateStatusForm(forms.Form):
+    status = forms.ChoiceField(choices = (('', 'Status'), ) + settings.STATUSES, widget=forms.Select(
+        attrs={'class': 'form-control', 'onchange': 'this.form.submit()'}
+    ))
+
 class SessionForm(forms.ModelForm):
     client = forms.ModelChoiceField(queryset=Client.objects.all(), empty_label="Select Client", widget=forms.Select(
         attrs={'class': 'form-control'}
