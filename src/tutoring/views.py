@@ -366,7 +366,7 @@ class CSVUploadView(TemplateView):
             
             non_decimal = re.compile(r'[^\d.]+')
 
-            phone_number = .split(" ::: ")[0]
+            phone_number = phone_number.split(" ::: ")[0]
 
             phone_number = non_decimal.sub('', phone_number)
             phone_number = "".join(phone_number.split('.'))
