@@ -323,69 +323,71 @@ class CSVUploadView(TemplateView):
         post = request.POST
         csvfile = request.FILES['csvFile'].file
         csvfile = csvfile.read().decode('utf8', 'ignore')
+        csvfile = "".join([y for y in (x.replace('\0', '') for x in csvfile)])
         headers = json.loads(request.POST['headers'])
 
-        reader = DictReader((x.replace('\0', '') for x in csvfile), headers);
+        with open('clients.csv', 'w') as outfile:
+            print(csvfile, file=outfile)
 
-        for index, row in enumerate(reader):
-            row["!!EMPTY!!"] = ""
+        with open('clients.csv', 'r') as csvfile:
+            reader = csv.DictReader(csvfile)
 
-            if index == 0:
-                continue
+            for row in reader:
+                row["!!EMPTY!!"] = ""
 
-            client = Client()
-            user = User()
+                client = Client()
+                user = User()
 
-            user.first_name = row[headers[int(post['firstName'])]]
-            user.last_name = row[headers[int(post['lastName'])]]
-            user.email = row[headers[int(post['email'])]]
+                user.first_name = row[headers[int(post['firstName'])]]
+                user.last_name = row[headers[int(post['lastName'])]]
+                user.email = row[headers[int(post['email'])]]
 
-            if user.first_name is None:
-                user.first_name = ""
-            
-            if user.last_name is None:
-                user.last_name = ""
+                if user.first_name is None:
+                    user.first_name = ""
+                
+                if user.last_name is None:
+                    user.last_name = ""
 
-            if user.email is None:
-                user.email = "" 
+                if user.email is None:
+                    user.email = "" 
 
-            if post['username'] == 'generate':
-                user.username = user.first_name.lower() + user.last_name.lower()
-            else: 
-                user.username = row[headers[int(post['username'])]]
-            
-            try:
+                if post['username'] == 'generate':
+                    user.username = user.first_name.lower() + user.last_name.lower()
+                else: 
+                    user.username = row[headers[int(post['username'])]]
+                
+                try:
+                    user.save()
+                except IntegrityError:
+                    continue
+
+                phone_number = row[headers[int(post['phone'])]]
+
+                if phone_number is None:
+                    phone_number = ""
+                
+                non_decimal = re.compile(r'[^\d.]+')
+
+                phone_number = phone_number.split(" ::: ")[0]
+
+                phone_number = non_decimal.sub('', phone_number)
+                phone_number = "".join(phone_number.split('.'))
+
+                if phone_number == '':
+                    phone_number = 0000000000
+                else:
+                    phone_number = int(phone_number)
+
+                client.address = row[headers[int(post['address'])]]
+                client.phone = phone_number
+                client.website = row[headers[int(post['website'])]]
+                client.wifi_ssid = row[headers[int(post['ssid'])]]
+                client.wifi_password = row[headers[int(post['password'])]]
+                client.user = user
+
+                user.set_password(client.phone)
                 user.save()
-            except IntegrityError:
-                continue
-
-            phone_number = row[headers[int(post['phone'])]]
-
-            if phone_number is None:
-                phone_number = ""
-            
-            non_decimal = re.compile(r'[^\d.]+')
-
-            phone_number = phone_number.split(" ::: ")[0]
-
-            phone_number = non_decimal.sub('', phone_number)
-            phone_number = "".join(phone_number.split('.'))
-
-            if phone_number == '':
-                phone_number = 0000000000
-            else:
-                phone_number = int(phone_number)
-
-            client.address = row[headers[int(post['address'])]]
-            client.phone = phone_number
-            client.website = row[headers[int(post['website'])]]
-            client.wifi_ssid = row[headers[int(post['ssid'])]]
-            client.wifi_password = row[headers[int(post['password'])]]
-            client.user = user
-
-            user.set_password(client.phone)
-            user.save()
-            client.save()
+                client.save()
 
         return redirect(reverse_lazy('clients'))
 
