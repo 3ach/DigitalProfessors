@@ -330,7 +330,7 @@ class CSVUploadView(TemplateView):
             print(csvfile, file=outfile)
 
         with open('clients.csv', 'r') as csvfile:
-            reader = csv.DictReader(csvfile)
+            reader = DictReader(csvfile)
 
             for row in reader:
                 row["!!EMPTY!!"] = ""
