@@ -34,6 +34,18 @@ class AccountingView(RedirectView):
         return user.accounting
 
 @method_decorator(login_required, name='dispatch')
+class EditSessionView(UpdateView):
+    model = Session
+    template_name_suffix = "-form"
+    form_class = SessionForm
+
+    def get_context_data(self, **kwargs):
+        context = super(EditSessionView, self).get_context_data(**kwargs)
+        context["verb"] = "Edit"
+
+        return context
+
+@method_decorator(login_required, name='dispatch')
 class ManagerAccountingView(TemplateView):
     template_name = 'tutoring/accounting-manager.html'
 
@@ -47,6 +59,8 @@ class ManagerAccountingView(TemplateView):
             base = Session.objects.filter(date__gte=start).filter(date__lte=end)
         else:
             base = Session.objects.all()
+
+        base = base.filter(cancelled=False)
 
         aggregates = base.aggregate(Sum('billed'), Sum('paid'), Sum('earnings'), Sum('earnings_paid'))
         unpaid = base.exclude(billed=F('paid')).values('client').annotate(Sum('billed')).annotate(Sum('paid'))

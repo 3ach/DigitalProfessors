@@ -222,12 +222,16 @@
 
 {% if not session.cancelled %}
 <div class="row">
-    <div class="col-12">
-        <br>
+    <br>
+    <div class="col-6">
         <form class="form" action="{% url 'session-cancel' session_id=session.id %}" method="POST">
             {% csrf_token %}
             <input type="submit" class="btn btn-outline-danger btn-block" value="Cancel Session" />
         </form>
+    </div>
+
+    <div class="col-6">
+        <a class="btn btn-outline-info btn-block" href="{% url 'edit-session' pk=session.id %}">Edit Session</a>
     </div>
 </div>
 {% endif %}

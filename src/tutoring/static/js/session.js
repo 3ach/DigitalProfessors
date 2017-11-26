@@ -22,10 +22,10 @@ function updateBilled() {
     }
 }
 
-$(document).on('change', '#id_start_time', updateBilled);
-$(document).on('change', '#id_end_time', updateBilled);
-$(document).on('change', '#id_date', updateBilled);
-$(document).on('change', '#id_hourly', updateBilled);
+$(document).on('blur', '#id_start_time', updateBilled);
+$(document).on('blur', '#id_end_time', updateBilled);
+$(document).on('blur', '#id_date', updateBilled);
+$(document).on('blur', '#id_hourly', updateBilled);
 
 $(document).ready(function () {
     $('#id_start_time').clockpicker({

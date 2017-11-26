@@ -36,10 +36,10 @@ class SessionForm(forms.ModelForm):
         attrs={'class': 'form-control', 'placeholder': 'Date', 'type': 'date'}))
 
     start_time = forms.TimeField(widget=forms.TimeInput(
-        attrs={'class': 'form-control', 'placeholder': 'Start Time', 'type': 'time'}, format="%I:%M %p"))
+        attrs={'class': 'form-control', 'placeholder': 'Start Time'}, format="%H:%M"))
 
     end_time = forms.TimeField(widget=forms.TimeInput(
-        attrs={'class': 'form-control', 'placeholder': 'End Time', 'type': 'time'}, format="%I:%M %p"))
+        attrs={'class': 'form-control', 'placeholder': 'End Time'}, format="%I:%M %p"))
 
     distance = forms.IntegerField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Distance'}))

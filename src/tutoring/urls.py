@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^session/(?P<session_id>[0-9]+)/notes', views.SessionNoteUpdate.as_view(), name="session-notes"),
     url(r'^session/(?P<session_id>[0-9]+)/cancel', views.CancelSessionView.as_view(), name="session-cancel"),
     url(r'^session/(?P<session_id>[0-9]+)/updateSession', views.UpdateStatusView.as_view(), name="status"),
+    url(r'^session/(?P<pk>[0-9]+)/edit', views.EditSessionView.as_view(), name="edit-session"),
     url(r'^session/(?P<session_id>[0-9]+)/', views.SessionView.as_view(), name="session-detail"),
     url(r'^clients/(?P<client_id>[0-9]+)/sessions', views.ClientSessionsView.as_view(), name='client-sessions'),
     url(r'^clients', views.ClientsView.as_view(), name="clients"),
